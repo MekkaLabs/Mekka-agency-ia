@@ -2,9 +2,9 @@ import Link from "next/link";
 import { getSiteConfig } from "@/lib/site-config";
 
 const strategicSignals = [
-  { value: "4", label: "frentes de implantacao" },
-  { value: "1", label: "oferta de entrada enxuta" },
-  { value: "100%", label: "foco em operacao real" },
+  { value: "4", label: "frentes em orbita" },
+  { value: "1", label: "ponto de partida" },
+  { value: "24/7", label: "mentalidade de sistema" },
 ];
 
 const heroBenefits = [
@@ -31,6 +31,13 @@ const operatingPrinciples = [
   "Atacar primeiro o gargalo que custa mais tempo e energia.",
   "Transformar improviso em processo editavel.",
   "Usar IA como camada operacional, nao como efeito especial.",
+];
+
+const orbitCapsules = [
+  "Marketing Digital",
+  "Branding",
+  "Marketing e Planejamento",
+  "Web, automacao e operacao",
 ];
 
 const modules = [
@@ -124,12 +131,20 @@ export default function Home() {
     <main className="page-shell">
       <header className="site-topbar">
         <Link href="/" className="site-mark">
-          <span className="site-mark-badge">ML</span>
-          <span>Mekka Labs</span>
+          <span className="site-mark-badge site-mark-badge-alien">
+            <span className="alien-eye alien-eye-left" />
+            <span className="alien-eye alien-eye-right" />
+            <span className="alien-mouth" />
+          </span>
+          <span className="site-mark-text">
+            <strong>Mekka Labs</strong>
+            <small>Launch systems for growth</small>
+          </span>
         </Link>
         <nav className="site-nav">
           <a href="#servicos">Modulos</a>
           <a href="#metodo">Metodo</a>
+          <a href="#orbita">Em orbita</a>
           <a href="#faq">FAQ</a>
           <a href="/login">Backoffice</a>
         </nav>
@@ -138,7 +153,7 @@ export default function Home() {
       <section className="hero">
         <div className="hero-copy">
           <div className="hero-badge-row">
-            <p className="eyebrow">Mekka Labs</p>
+            <p className="eyebrow">Pronto para decolar?</p>
             <span className="hero-status-pill">Growth, criacao e sistemas de IA</span>
           </div>
           <h1>
@@ -183,7 +198,7 @@ export default function Home() {
 
         <div className="hero-card">
           <div className="hero-card-panel">
-            <span className="card-kicker">Primeira oferta</span>
+            <span className="card-kicker">Ponto de partida</span>
             <h2>Diagnostico de IA para a Empresa</h2>
             <p>
               A porta de entrada da Mekka para descobrir onde sua empresa pode
@@ -196,7 +211,7 @@ export default function Home() {
             </ul>
           </div>
           <div className="hero-card-note">
-            <span>Leitura inicial</span>
+            <span>Launch control</span>
             <strong>Atendimento, vendas, marketing e operacao</strong>
           </div>
         </div>
@@ -222,6 +237,20 @@ export default function Home() {
           {operatingPrinciples.map((item) => (
             <article key={item} className="split-band-card">
               <p>{item}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="orbita" className="section orbit-strip">
+        <div className="section-heading">
+          <p className="eyebrow">Em orbita</p>
+          <h2>Os terrenos onde a Mekka entra para destravar crescimento</h2>
+        </div>
+        <div className="orbit-capsules">
+          {orbitCapsules.map((item) => (
+            <article key={item} className="orbit-capsule">
+              <span>{item}</span>
             </article>
           ))}
         </div>

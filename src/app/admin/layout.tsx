@@ -65,9 +65,18 @@ export default async function AdminLayout({
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">
-        <div>
-          <p className="eyebrow">Mekka OS</p>
-          <h2>Area interna</h2>
+        <div className="admin-brand">
+          <div className="site-mark admin-mark">
+            <span className="site-mark-badge site-mark-badge-alien">
+              <span className="alien-eye alien-eye-left" />
+              <span className="alien-eye alien-eye-right" />
+              <span className="alien-mouth" />
+            </span>
+            <span className="site-mark-text">
+              <strong>Mekka OS</strong>
+              <small>Backoffice orbital</small>
+            </span>
+          </div>
           <p className="helper-copy">
             CRM, operacao e gestao da agencia no mesmo app.
           </p>

@@ -18,7 +18,7 @@ export default async function DiagnosticPage({
     <main className="auth-shell">
       <section className="auth-panel">
         <div className="auth-copy">
-          <p className="eyebrow">Diagnostico de IA</p>
+          <p className="eyebrow">Ponto de partida</p>
           <h1>Descubra onde sua empresa pode ganhar tempo e vender melhor</h1>
           <p className="lead">
             Preencha os dados abaixo para entrar no CRM da Mekka e iniciar a

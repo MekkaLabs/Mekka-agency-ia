@@ -1,0 +1,97 @@
+# CRM Data Model - Mekka Labs
+
+## Entidades principais
+
+### users
+
+- id
+- name
+- email
+- role
+- created_at
+
+### leads
+
+- id
+- name
+- company_name
+- email
+- phone
+- source
+- pain_point
+- interest
+- pipeline_stage
+- next_action
+- owner_id
+- created_at
+- updated_at
+
+### companies
+
+- id
+- name
+- segment
+- size
+- website
+- status
+- owner_id
+- created_at
+
+### contacts
+
+- id
+- company_id
+- name
+- role
+- email
+- phone
+- is_primary
+
+### deals
+
+- id
+- lead_id
+- company_id
+- offer_type
+- value
+- status
+- close_date
+
+### projects
+
+- id
+- company_id
+- deal_id
+- name
+- type
+- module
+- status
+- start_date
+- due_date
+- next_step
+
+### tasks
+
+- id
+- project_id
+- title
+- status
+- due_date
+- owner_id
+
+### notes
+
+- id
+- related_type
+- related_id
+- body
+- author_id
+- created_at
+
+## Regras iniciais
+
+- um lead pode virar uma company
+- uma company pode ter varios contacts
+- um lead ou company pode ter um deal
+- um deal fechado gera um project
+- um project pode ter varias tasks e notes

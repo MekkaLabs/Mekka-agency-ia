@@ -1,0 +1,36 @@
+{
+  "name": "mekka-labs-agency-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Relaunch da Mekka Labs com site institucional, AIOX Core, squads e segundo cerebro em Obsidian.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src"
+  },
+  "keywords": [
+    "agency",
+    "ai",
+    "vercel",
+    "nextjs"
+  ],
+  "author": "Mekka Labs",
+  "license": "UNLICENSED",
+  "type": "module",
+  "dependencies": {
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.106.0",
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.6",
+    "typescript": "^6.0.3"
+  }
+}

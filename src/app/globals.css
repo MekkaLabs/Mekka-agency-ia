@@ -546,7 +546,8 @@ a {
 .form-grid,
 .record-list,
 .record-body,
-.inline-form {
+.inline-form,
+.mini-stats {
   display: grid;
   gap: 16px;
 }
@@ -618,6 +619,37 @@ a {
 
 .inline-grow {
   grid-column: span 2;
+}
+
+.inline-form-compact {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.record-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mini-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mini-stat {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.48);
+}
+
+.mini-stat strong {
+  font-size: 1.7rem;
+}
+
+.mini-stat span {
+  color: var(--muted);
 }
 
 .ghost-button {
@@ -752,7 +784,9 @@ th {
   .admin-columns,
   .pipeline-grid,
   .form-grid.two-up,
-  .inline-form {
+  .inline-form,
+  .inline-form-compact,
+  .mini-stats {
     grid-template-columns: 1fr;
   }
 

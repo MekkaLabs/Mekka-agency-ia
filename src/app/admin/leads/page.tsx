@@ -1,4 +1,9 @@
-import { createLead, deleteLead, updateLead } from "@/app/admin/actions";
+import {
+  convertLeadToAccount,
+  createLead,
+  deleteLead,
+  updateLead,
+} from "@/app/admin/actions";
 import { hasSupabaseEnv } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 
@@ -215,8 +220,25 @@ export default async function AdminLeadsPage({
 
               <form action={deleteLead}>
                 <input type="hidden" name="id" value={lead.id} />
-                <button type="submit" className="ghost-button">
-                  Remover lead
+                <div className="record-actions">
+                  <button type="submit" className="ghost-button">
+                    Remover lead
+                  </button>
+                </div>
+              </form>
+
+              <form className="inline-form inline-form-compact" action={convertLeadToAccount}>
+                <input type="hidden" name="id" value={lead.id} />
+                <input type="hidden" name="company_status" value="diagnostico" />
+                <label>
+                  <span>Conversao</span>
+                  <select name="create_project" defaultValue="1">
+                    <option value="1">Criar conta + abrir diagnostico</option>
+                    <option value="0">Criar so a conta</option>
+                  </select>
+                </label>
+                <button type="submit" className="secondary-link auth-button">
+                  Converter lead
                 </button>
               </form>
             </article>

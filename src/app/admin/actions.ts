@@ -28,6 +28,65 @@ function touchAdminViews() {
   revalidatePath("/admin/pipeline");
 }
 
+async function findOrCreateCompanyFromLead(leadId: string, companyStatus: string) {
+  const supabase = await createClient();
+  const { data: lead, error: leadError } = await supabase
+    .from("leads")
+    .select("id, company_name, pain_point")
+    .eq("id", leadId)
+    .single();
+
+  if (leadError || !lead) {
+    return {
+      errorMessage: leadError?.message ?? "Lead nao encontrado",
+      companyId: null,
+      companyName: null,
+      painPoint: null,
+    };
+  }
+
+  const { data: existingCompany } = await supabase
+    .from("companies")
+    .select("id, name")
+    .eq("name", lead.company_name)
+    .limit(1)
+    .maybeSingle();
+
+  if (existingCompany) {
+    return {
+      errorMessage: null,
+      companyId: existingCompany.id,
+      companyName: existingCompany.name,
+      painPoint: lead.pain_point,
+    };
+  }
+
+  const { data: company, error: companyError } = await supabase
+    .from("companies")
+    .insert({
+      name: lead.company_name,
+      status: companyStatus,
+    })
+    .select("id, name")
+    .single();
+
+  if (companyError || !company) {
+    return {
+      errorMessage: companyError?.message ?? "Nao foi possivel criar a empresa",
+      companyId: null,
+      companyName: null,
+      painPoint: lead.pain_point,
+    };
+  }
+
+  return {
+    errorMessage: null,
+    companyId: company.id,
+    companyName: company.name,
+    painPoint: lead.pain_point,
+  };
+}
+
 export async function createLead(formData: FormData) {
   ensureSupabase("/admin/leads");
 
@@ -114,6 +173,79 @@ export async function deleteLead(formData: FormData) {
 
   touchAdminViews();
   redirect("/admin/leads?success=Lead%20removido");
+}
+
+export async function convertLeadToAccount(formData: FormData) {
+  ensureSupabase("/admin/leads");
+
+  const leadId = getRequiredField(formData, "id");
+  const companyStatus = getRequiredField(formData, "company_status") || "diagnostico";
+  const createProject = getRequiredField(formData, "create_project") === "1";
+
+  if (!leadId) {
+    redirect("/admin/leads?error=Lead%20invalido");
+  }
+
+  const conversion = await findOrCreateCompanyFromLead(leadId, companyStatus);
+
+  if (conversion.errorMessage || !conversion.companyId || !conversion.companyName) {
+    redirect(
+      `/admin/leads?error=${encodeURIComponent(conversion.errorMessage ?? "Falha na conversao")}`,
+    );
+  }
+
+  const supabase = await createClient();
+
+  if (createProject) {
+    const { data: existingProject } = await supabase
+      .from("projects")
+      .select("id")
+      .eq("company_id", conversion.companyId)
+      .eq("type", "diagnostico")
+      .limit(1)
+      .maybeSingle();
+
+    if (!existingProject) {
+      const { error: projectError } = await supabase.from("projects").insert({
+        company_id: conversion.companyId,
+        name: `Diagnostico IA - ${conversion.companyName}`,
+        type: "diagnostico",
+        module: "atendimento_e_vendas",
+        status: "diagnostico",
+        next_step: conversion.painPoint
+          ? `Mapear gargalo principal: ${conversion.painPoint}`
+          : "Agendar reuniao de diagnostico",
+      });
+
+      if (projectError) {
+        redirect(`/admin/leads?error=${encodeURIComponent(projectError.message)}`);
+      }
+    }
+  }
+
+  const { error: leadError } = await supabase
+    .from("leads")
+    .update({
+      pipeline_stage: createProject ? "diagnostico_agendado" : "contato_iniciado",
+      next_action: createProject
+        ? "Conduzir diagnostico e transformar em proposta"
+        : "Qualificar conta e decidir abertura do diagnostico",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", leadId);
+
+  if (leadError) {
+    redirect(`/admin/leads?error=${encodeURIComponent(leadError.message)}`);
+  }
+
+  touchAdminViews();
+  redirect(
+    `/admin/leads?success=${encodeURIComponent(
+      createProject
+        ? "Lead convertido em conta e diagnostico aberto"
+        : "Lead convertido em conta",
+    )}`,
+  );
 }
 
 export async function createCompany(formData: FormData) {

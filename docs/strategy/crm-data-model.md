@@ -95,3 +95,9 @@
 - um lead ou company pode ter um deal
 - um deal fechado gera um project
 - um project pode ter varias tasks e notes
+
+## Estado atual do MVP
+
+- leads ja podem ser convertidos manualmente em `company`
+- a conversao tambem pode abrir um `project` de `diagnostico`
+- o dashboard do admin passa a ler leads e trabalhos reais do banco

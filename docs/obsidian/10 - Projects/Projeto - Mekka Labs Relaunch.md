@@ -34,6 +34,8 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 - home publica preparada para usar CTA configuravel por ambiente
 - dominio principal consolidado como `agenciamekka.com.br`
 - fallback comercial definido: sem agenda real, o CTA principal continua em `/diagnostico`
+- leads agora podem virar conta e abrir diagnostico direto pelo admin
+- dashboard interno deixou de ser estatico e passou a ler sinais reais do CRM
 
 ## Referencias
 

@@ -43,6 +43,7 @@ Nova rodada local concluida com foco em linguagem visual.
 Entregue agora:
 
 - home refinada em Tailwind + Atomic Design com look mais premium, editorial e futurista
+- rodada adicional da home feita com referencia de ritmo visual no site da WACUS, adaptada para a identidade Mekka
 - componentes base reutilizaveis fortalecidos:
   - `ButtonLink`
   - `LogoMark`
@@ -57,10 +58,12 @@ Entregue agora:
   - hero do dashboard
   - cards, listas, quick actions e estados de suporte
 - fallback visual do `/admin` sem Supabase refinado para ficar coerente com o resto do sistema
+- fechamento da home reforcado com clima mais premium e contato final mais forte
 
 Observacao:
 
 - o admin autenticado continua dependendo de `.env.local` real e Supabase configurado para validacao com dados reais
+- a referencia WACUS foi usada como direcao de composicao e atmosfera, nao como copia de linguagem de marca
 
 ### Site publico
 

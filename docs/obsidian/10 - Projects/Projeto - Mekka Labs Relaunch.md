@@ -47,6 +47,12 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 - hero, header, modulos, prova e CTA final agora seguem uma gramática visual mais Mekka OS
 - sistema visual foi puxado para o admin com sidebar mais forte, cards premium, cockpit operacional e fallback do backoffice refinado
 - componentes base como `ButtonLink`, `LogoMark`, `SectionHeading`, `FeatureCard` e `StatPill` viraram a espinha da nova linguagem
+- home ganhou uma nova rodada de direção visual inspirada no ritmo do WACUS:
+  - hero mais imersivo
+  - pacing mais editorial
+  - manifesto com mais atmosfera
+  - fechamento mais forte de contato
+- a referência foi usada como direção de linguagem e composição, sem copiar assets, estrutura literal ou identidade
 
 ## Referencias
 

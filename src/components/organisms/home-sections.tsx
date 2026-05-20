@@ -47,6 +47,21 @@ const modules = [
   },
 ];
 
+const manifestoLines = [
+  {
+    title: "Webs, operações e jornadas desenhadas para conversão.",
+    emphasis: "estruturas de crescimento com engenharia comercial.",
+  },
+  {
+    title: "IA aplicada onde o negócio sente gargalo de verdade.",
+    emphasis: "camadas práticas, editáveis e orientadas a resultado.",
+  },
+  {
+    title: "Marca, tráfego e operação lendo o mesmo sistema.",
+    emphasis: "continuidade operacional para escalar sem caos.",
+  },
+];
+
 const processSteps = [
   "Você entra pelo diagnóstico e mostra onde o negócio está travando.",
   "A Mekka mapeia gargalos, prioridades e o primeiro ponto de impacto.",
@@ -95,6 +110,13 @@ const faqs = [
   },
 ];
 
+const experienceHighlights = [
+  "Diagnóstico comercial e operacional como entrada",
+  "Implantações rápidas com foco em atendimento, vendas e operação",
+  "CRM e backoffice próprios para manter memória e ritmo",
+  "Execução com stack simples, editável e orientada a conversão",
+];
+
 export function HomeSections({
   primaryHref,
   primaryLabel,
@@ -106,7 +128,7 @@ export function HomeSections({
     <>
       <section
         id="orbita"
-        className="mt-8 rounded-[32px] border border-white/8 bg-[radial-gradient(circle_at_left,rgba(163,230,53,0.08),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-6 md:p-8"
+        className="mt-10 rounded-[32px] border border-white/8 bg-[radial-gradient(circle_at_left,rgba(163,230,53,0.08),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-6 md:p-8"
       >
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <SectionHeading
@@ -132,6 +154,36 @@ export function HomeSections({
         </div>
       </section>
 
+      <section className="mt-24 overflow-hidden rounded-[36px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] p-8 md:p-12">
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <SectionHeading
+              eyebrow="Manifesto operacional"
+              title="A Mekka projeta crescimento com sistema, não com improviso."
+              description="Cada camada da Mekka combina direção comercial, atmosfera premium e lógica operacional para transformar crescimento em rotina."
+            />
+          </div>
+          <div className="space-y-8">
+            {manifestoLines.map((line, index) => (
+              <article
+                key={line.title}
+                className="relative border-b border-white/8 pb-8 last:border-b-0 last:pb-0"
+              >
+                <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.34em] text-cyan-200/70">
+                  manifesto 0{index + 1}
+                </span>
+                <p className="max-w-4xl font-[var(--font-space-grotesk)] text-3xl font-semibold leading-[1.02] tracking-[-0.05em] text-white md:text-5xl">
+                  {line.title}
+                </p>
+                <p className="mt-4 max-w-3xl text-base leading-8 text-zinc-400 md:text-lg">
+                  {line.emphasis}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mt-20">
         <SectionHeading
           eyebrow="O problema"
@@ -150,7 +202,7 @@ export function HomeSections({
         </div>
       </section>
 
-      <section className="mt-20 grid gap-6 lg:grid-cols-2">
+      <section className="mt-24 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <div className="rounded-[32px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-8">
           <SectionHeading
             eyebrow="Oferta de entrada"
@@ -210,7 +262,44 @@ export function HomeSections({
         </div>
       </section>
 
-      <section id="metodo" className="mt-20">
+      <section className="mt-24 rounded-[36px] border border-white/8 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.1),transparent_24%),linear-gradient(180deg,rgba(6,10,12,0.96),rgba(3,6,7,0.98))] p-8 md:p-12">
+        <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+          <div>
+            <SectionHeading
+              eyebrow="Nossa experiência"
+              title="Um stack de growth, criação e sistemas desenhado para negócios em movimento."
+              description="A Mekka não vende só estética. Ela vende capacidade operacional, leitura comercial e uma base que pode ser expandida com segurança."
+            />
+            <div className="mt-8 flex flex-wrap gap-3">
+              <ButtonLink href={primaryHref}>{primaryLabel}</ButtonLink>
+              <ButtonLink
+                href={secondaryHref}
+                variant="secondary"
+                external={secondaryExternal}
+              >
+                {secondaryLabel}
+              </ButtonLink>
+            </div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {experienceHighlights.map((item, index) => (
+              <div
+                key={item}
+                className="rounded-[28px] border border-white/8 bg-white/[0.03] p-6"
+              >
+                <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-zinc-500">
+                  experiência 0{index + 1}
+                </p>
+                <p className="mt-5 font-[var(--font-space-grotesk)] text-2xl font-semibold leading-[1.04] tracking-[-0.04em] text-white">
+                  {item}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="metodo" className="mt-24">
         <SectionHeading
           eyebrow="Como funciona"
           title="Método simples para não assustar nem prometer magia"
@@ -230,7 +319,7 @@ export function HomeSections({
         </div>
       </section>
 
-      <section className="mt-20 grid gap-6 lg:grid-cols-2">
+      <section className="mt-24 grid gap-6 lg:grid-cols-2">
         <div>
           <SectionHeading
             eyebrow="Prova"
@@ -275,25 +364,53 @@ export function HomeSections({
         </div>
       </section>
 
-      <section className="mt-20 rounded-[38px] border border-lime-300/12 bg-[radial-gradient(circle_at_top,rgba(163,230,53,0.12),transparent_32%),radial-gradient(circle_at_bottom,rgba(56,189,248,0.12),transparent_30%),linear-gradient(180deg,rgba(9,16,12,0.96),rgba(3,6,4,0.98))] px-8 py-12 text-center md:px-14">
-        <SectionHeading
-          eyebrow="Próximo passo"
-          title="Descubra onde sua empresa pode ganhar tempo e vender melhor com IA"
-          description="Comece com o diagnóstico. A Mekka entra pelo problema mais caro, estrutura a primeira camada e prepara o terreno para crescer com mais consistência."
-          align="center"
-        />
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <ButtonLink href={primaryHref}>{primaryLabel}</ButtonLink>
-          <ButtonLink
-            href={secondaryHref}
-            variant="secondary"
-            external={secondaryExternal}
-          >
-            {secondaryLabel}
-          </ButtonLink>
-          <ButtonLink href="/login" variant="secondary">
-            Entrar na área interna
-          </ButtonLink>
+      <section className="mt-24 rounded-[40px] border border-lime-300/12 bg-[radial-gradient(circle_at_top,rgba(163,230,53,0.12),transparent_32%),radial-gradient(circle_at_bottom,rgba(56,189,248,0.12),transparent_30%),linear-gradient(180deg,rgba(9,16,12,0.96),rgba(3,6,4,0.98))] px-8 py-12 md:px-14 md:py-16">
+        <div className="grid gap-10 lg:grid-cols-[1fr_360px] lg:items-end">
+          <div>
+            <SectionHeading
+              eyebrow="Work with us"
+              title="Descubra onde sua empresa pode ganhar tempo e vender melhor com IA"
+              description="Comece com o diagnóstico. A Mekka entra pelo problema mais caro, estrutura a primeira camada e prepara o terreno para crescer com mais consistência."
+            />
+            <div className="mt-8 flex flex-wrap gap-3">
+              <ButtonLink href={primaryHref}>{primaryLabel}</ButtonLink>
+              <ButtonLink
+                href={secondaryHref}
+                variant="secondary"
+                external={secondaryExternal}
+              >
+                {secondaryLabel}
+              </ButtonLink>
+              <ButtonLink href="/login" variant="secondary">
+                Entrar na área interna
+              </ButtonLink>
+            </div>
+          </div>
+
+          <div className="rounded-[30px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.018))] p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-zinc-500">
+              contato direto
+            </p>
+            <div className="mt-6 space-y-5">
+              <div>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">
+                  email
+                </span>
+                <p className="mt-2 font-[var(--font-space-grotesk)] text-2xl font-semibold tracking-[-0.04em] text-white">
+                  contato@agenciamekka.com.br
+                </p>
+              </div>
+              <div>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">
+                  entrada ideal
+                </span>
+                <p className="mt-2 text-base leading-8 text-zinc-300">
+                  empresas com gargalo comercial, resposta lenta, retrabalho operacional
+                  ou necessidade clara de organizar growth com IA.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </>

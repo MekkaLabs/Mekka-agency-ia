@@ -29,6 +29,12 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 - [ ] criar proposta padrao do Diagnostico de Receita + IA
 - [ ] mapear base antiga para outreach
 
+## Atualizacoes recentes
+
+- home publica preparada para usar CTA configuravel por ambiente
+- dominio principal consolidado como `agenciamekka.com.br`
+- fallback comercial definido: sem agenda real, o CTA principal continua em `/diagnostico`
+
 ## Referencias
 
 - [[Home]]

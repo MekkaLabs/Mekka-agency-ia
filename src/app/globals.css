@@ -256,6 +256,10 @@ a {
   margin-top: 22px;
 }
 
+.hero-inline-meta {
+  margin-top: 20px;
+}
+
 .process-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }

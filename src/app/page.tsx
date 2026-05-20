@@ -1,3 +1,5 @@
+import { getSiteConfig } from "@/lib/site-config";
+
 const heroBenefits = [
   "Mais resposta e menos lead perdido",
   "Mais ritmo comercial e menos follow-up esquecido",
@@ -95,6 +97,16 @@ const faqs = [
 ];
 
 export default function Home() {
+  const site = getSiteConfig();
+  const primaryCtaHref = site.schedulingUrl ?? "/diagnostico";
+  const primaryCtaLabel = site.schedulingUrl
+    ? "Agendar Diagnostico de IA"
+    : "Enviar Diagnostico de IA";
+  const secondaryCtaHref = site.whatsappUrl ?? `mailto:${site.contactEmail}`;
+  const secondaryCtaLabel = site.whatsappUrl
+    ? "Falar no WhatsApp"
+    : "Falar por email";
+
   return (
     <main className="page-shell">
       <section className="hero">
@@ -110,16 +122,16 @@ export default function Home() {
             sem exigir um time tecnico interno.
           </p>
           <div className="hero-actions">
-            <a href="/diagnostico" className="primary-link">
-              Agendar Diagnostico de IA
+            <a href={primaryCtaHref} className="primary-link">
+              {primaryCtaLabel}
             </a>
             <a
-              href="https://wa.me/"
-              target="_blank"
-              rel="noreferrer"
+              href={secondaryCtaHref}
+              target={secondaryCtaHref.startsWith("http") ? "_blank" : undefined}
+              rel={secondaryCtaHref.startsWith("http") ? "noreferrer" : undefined}
               className="secondary-link"
             >
-              Falar no WhatsApp
+              {secondaryCtaLabel}
             </a>
           </div>
           <ul className="bullet-list hero-benefits">
@@ -127,6 +139,9 @@ export default function Home() {
               <li key={item}>{item}</li>
             ))}
           </ul>
+          <p className="helper-copy hero-inline-meta">
+            Dominio principal: {site.domain}
+          </p>
         </div>
 
         <div className="hero-card">
@@ -273,16 +288,16 @@ export default function Home() {
             consistencia.
           </p>
           <div className="hero-actions final-actions">
-            <a href="/diagnostico" className="primary-link">
-              Agendar Diagnostico
+            <a href={primaryCtaHref} className="primary-link">
+              {primaryCtaLabel}
             </a>
             <a
-              href="https://wa.me/"
-              target="_blank"
-              rel="noreferrer"
+              href={secondaryCtaHref}
+              target={secondaryCtaHref.startsWith("http") ? "_blank" : undefined}
+              rel={secondaryCtaHref.startsWith("http") ? "noreferrer" : undefined}
               className="secondary-link"
             >
-              Conversar no WhatsApp
+              {secondaryCtaLabel}
             </a>
             <a href="/login" className="secondary-link">
               Entrar na area interna

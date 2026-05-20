@@ -33,6 +33,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               <li key={item}>{item}</li>
             ))}
           </ul>
+          <div className="auth-aside-card">
+            <span>Mekka OS</span>
+            <strong>CRM, forecast e delivery no mesmo painel</strong>
+            <p>
+              A area interna foi desenhada para reduzir troca de contexto e dar
+              visibilidade do funil e da execucao.
+            </p>
+          </div>
         </div>
 
         <form className="auth-form" action={login}>

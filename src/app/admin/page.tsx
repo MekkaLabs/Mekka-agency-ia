@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { hasSupabaseEnv } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrencyBRL, leadStageLabels } from "@/lib/crm";
@@ -32,6 +33,24 @@ export default async function AdminDashboardPage() {
   }[] = [];
   let pipelineSummary: { label: string; count: number }[] = [];
   let openDealValue = "R$ 0,00";
+
+  const quickActions = [
+    {
+      href: "/admin/leads",
+      title: "Triar leads",
+      description: "Buscar novos contatos, atualizar etapa e registrar contexto.",
+    },
+    {
+      href: "/admin/deals",
+      title: "Revisar deals",
+      description: "Acompanhar propostas abertas e previsao de receita.",
+    },
+    {
+      href: "/admin/work",
+      title: "Mover delivery",
+      description: "Abrir diagnosticos, atualizar prazo e proximo passo.",
+    },
+  ];
 
   if (hasSupabaseEnv()) {
     const supabase = await createClient();
@@ -133,6 +152,29 @@ export default async function AdminDashboardPage() {
 
   return (
     <main className="admin-main">
+      <section className="admin-hero">
+        <div className="admin-hero-copy">
+          <p className="eyebrow">Painel operacional</p>
+          <h2>Uma leitura unica do que precisa andar hoje</h2>
+          <p className="helper-copy">
+            O foco aqui e transformar sinais do CRM em decisao rapida, visibilidade
+            de receita e ritmo de entrega.
+          </p>
+        </div>
+        <div className="admin-hero-rail">
+          <div className="admin-hero-chip">
+            <span>Forecast aberto</span>
+            <strong>{openDealValue}</strong>
+          </div>
+          <div className="admin-hero-chip">
+            <span>Ritmo atual</span>
+            <strong>
+              {recentLeads.length > 0 ? `${recentLeads.length} leads recentes` : "MVP"}
+            </strong>
+          </div>
+        </div>
+      </section>
+
       <section className="admin-grid">
         {metrics.map((metric) => (
           <article key={metric.label} className="admin-card metric-card">
@@ -172,6 +214,44 @@ export default async function AdminDashboardPage() {
                 <span>{item.label}</span>
               </div>
             ))}
+          </div>
+        </article>
+      </section>
+
+      <section className="admin-columns">
+        <article className="admin-card">
+          <p className="eyebrow">Acoes rapidas</p>
+          <h2>Entradas principais do time</h2>
+          <div className="quick-action-grid">
+            {quickActions.map((action) => (
+              <Link key={action.href} href={action.href} className="quick-action-card">
+                <strong>{action.title}</strong>
+                <p>{action.description}</p>
+              </Link>
+            ))}
+          </div>
+        </article>
+
+        <article className="admin-card">
+          <p className="eyebrow">Saude operacional</p>
+          <h2>O que o sistema esta lendo agora</h2>
+          <div className="health-list">
+            <div className="health-item">
+              <strong>CRM</strong>
+              <span>{recentLeads.length > 0 ? "Entradas recentes detectadas" : "Aguardando volume real"}</span>
+            </div>
+            <div className="health-item">
+              <strong>Receita</strong>
+              <span>{openDealValue} em deals fora de ganho ou perdido</span>
+            </div>
+            <div className="health-item">
+              <strong>Delivery</strong>
+              <span>
+                {activeProjects.length > 0
+                  ? `${activeProjects.length} trabalho(s) ativo(s) no radar`
+                  : "Nenhum trabalho aberto ainda"}
+              </span>
+            </div>
           </div>
         </article>
       </section>

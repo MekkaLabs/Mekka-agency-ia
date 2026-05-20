@@ -29,6 +29,14 @@ export default async function DiagnosticPage({
             <li>Leitura inicial de atendimento e follow-up</li>
             <li>Primeira recomendacao de implantacao</li>
           </ul>
+          <div className="auth-aside-card">
+            <span>Formato de entrada</span>
+            <strong>Formulario enxuto com resposta orientada a gargalo</strong>
+            <p>
+              O objetivo nao e coletar tudo. E entender rapido onde a empresa esta
+              perdendo tempo, resposta ou consistencia.
+            </p>
+          </div>
         </div>
 
         <form className="auth-form" action={requestDiagnostic}>
@@ -105,6 +113,10 @@ export default async function DiagnosticPage({
           >
             Enviar para o CRM
           </button>
+          <p className="helper-copy">
+            Depois do envio, o lead entra no CRM e pode seguir para conta,
+            diagnostico e deal.
+          </p>
         </form>
       </section>
     </main>

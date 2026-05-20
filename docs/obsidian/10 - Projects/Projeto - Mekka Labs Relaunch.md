@@ -41,6 +41,8 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 - CRM agora tem busca e filtros em leads, contas, trabalhos e pipeline
 - entidade `deals` criada no schema e no admin para acompanhar propostas e forecast
 - checklist operacional do funil ponta a ponta documentado em `docs/ops/funnel-validation-checklist.md`
+- home entrou em fase de redesign com navegacao superior, hierarquia visual mais forte e seções mais editoriais
+- dashboard e telas de autenticacao receberam refinamento de UX/UI e base nova de animacoes suaves no front
 
 ## Referencias
 

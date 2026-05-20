@@ -36,6 +36,32 @@ O gargalo agora e:
 
 ## Estado atual do produto
 
+### Rodada mais recente de front
+
+Nova rodada local concluida com foco em linguagem visual.
+
+Entregue agora:
+
+- home refinada em Tailwind + Atomic Design com look mais premium, editorial e futurista
+- componentes base reutilizaveis fortalecidos:
+  - `ButtonLink`
+  - `LogoMark`
+  - `SectionHeading`
+  - `FeatureCard`
+  - `StatPill`
+- header e hero da home com assinatura mais forte de `Mekka OS`
+- secoes da home com mais variacao de ritmo, hierarquia e profundidade visual
+- sistema visual expandido para o admin:
+  - sidebar
+  - header
+  - hero do dashboard
+  - cards, listas, quick actions e estados de suporte
+- fallback visual do `/admin` sem Supabase refinado para ficar coerente com o resto do sistema
+
+Observacao:
+
+- o admin autenticado continua dependendo de `.env.local` real e Supabase configurado para validacao com dados reais
+
 ### Site publico
 
 Rotas:

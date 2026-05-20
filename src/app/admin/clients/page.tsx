@@ -66,7 +66,7 @@ export default async function AdminClientsPage({
   return (
     <main className="admin-main">
       <section className="admin-columns admin-columns-top">
-        <article className="admin-card">
+        <article className="admin-card admin-card-spotlight">
           <div className="section-heading">
             <p className="eyebrow">Nova conta</p>
             <h2>Cadastrar empresa</h2>
@@ -117,7 +117,7 @@ export default async function AdminClientsPage({
           </form>
         </article>
 
-        <article className="admin-card">
+        <article className="admin-card admin-card-muted">
           <div className="section-heading">
             <p className="eyebrow">Uso sugerido</p>
             <h2>Quando virar cliente</h2>
@@ -130,7 +130,7 @@ export default async function AdminClientsPage({
         </article>
       </section>
 
-      <section className="admin-card">
+      <section className="admin-card admin-card-surface">
         <div className="section-heading">
           <p className="eyebrow">Clientes</p>
           <h2>Contas registradas</h2>

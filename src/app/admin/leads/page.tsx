@@ -124,7 +124,7 @@ export default async function AdminLeadsPage({
   return (
     <main className="admin-main">
       <section className="admin-columns admin-columns-top">
-        <article className="admin-card">
+        <article className="admin-card admin-card-spotlight">
           <div className="section-heading">
             <p className="eyebrow">Novo lead</p>
             <h2>Entrada manual no CRM</h2>
@@ -205,7 +205,7 @@ export default async function AdminLeadsPage({
           </form>
         </article>
 
-        <article className="admin-card">
+        <article className="admin-card admin-card-muted">
           <div className="section-heading">
             <p className="eyebrow">Checklist</p>
             <h2>Primeiras acoes por lead</h2>
@@ -219,7 +219,7 @@ export default async function AdminLeadsPage({
         </article>
       </section>
 
-      <section className="admin-card">
+      <section className="admin-card admin-card-surface">
         <div className="section-heading">
           <p className="eyebrow">CRM</p>
           <h2>Leads capturados</h2>

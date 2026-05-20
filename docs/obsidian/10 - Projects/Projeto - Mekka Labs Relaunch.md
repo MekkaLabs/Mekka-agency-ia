@@ -23,9 +23,9 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 
 ## Backlog imediato
 
-- [ ] redesenhar UX/UI do site institucional inteiro
+- [ ] fechar a proxima rodada do redesign institucional com prova comercial mais forte
 - [ ] adicionar animacoes e transicoes do site
-- [ ] evoluir UX/UI do dashboard admin
+- [ ] evoluir UX/UI do admin autenticado com dados reais e estados vazios mais ricos
 - [ ] aprofundar backend e frontend do produto
 - [ ] subir projeto na Vercel
 - [ ] cortar DNS do dominio
@@ -43,6 +43,10 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 - checklist operacional do funil ponta a ponta documentado em `docs/ops/funnel-validation-checklist.md`
 - home entrou em fase de redesign com navegacao superior, hierarquia visual mais forte e seções mais editoriais
 - dashboard e telas de autenticacao receberam refinamento de UX/UI e base nova de animacoes suaves no front
+- rodada local com Tailwind + Atomic Design consolidada na home com linguagem mais premium e futurista
+- hero, header, modulos, prova e CTA final agora seguem uma gramática visual mais Mekka OS
+- sistema visual foi puxado para o admin com sidebar mais forte, cards premium, cockpit operacional e fallback do backoffice refinado
+- componentes base como `ButtonLink`, `LogoMark`, `SectionHeading`, `FeatureCard` e `StatPill` viraram a espinha da nova linguagem
 
 ## Referencias
 

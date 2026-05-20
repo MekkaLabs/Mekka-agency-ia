@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signOut } from "@/app/login/actions";
+import { LogoMark } from "@/components/atoms/logo-mark";
 import { hasSupabaseEnv } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 
@@ -20,9 +21,10 @@ export default async function AdminLayout({
 }>) {
   if (!hasSupabaseEnv()) {
     return (
-      <main className="auth-shell">
+      <main className="auth-shell auth-shell-admin">
         <section className="auth-panel">
           <div className="auth-copy">
+            <LogoMark subtitle="Mekka OS setup mode" />
             <p className="eyebrow">Supabase pendente</p>
             <h1>Configure o backend antes de usar o admin</h1>
             <p className="lead">
@@ -66,17 +68,7 @@ export default async function AdminLayout({
     <div className="admin-shell">
       <aside className="admin-sidebar">
         <div className="admin-brand">
-          <div className="site-mark admin-mark">
-            <span className="site-mark-badge site-mark-badge-alien">
-              <span className="alien-eye alien-eye-left" />
-              <span className="alien-eye alien-eye-right" />
-              <span className="alien-mouth" />
-            </span>
-            <span className="site-mark-text">
-              <strong>Mekka OS</strong>
-              <small>Backoffice orbital</small>
-            </span>
-          </div>
+          <LogoMark href="/admin" subtitle="Backoffice orbital" />
           <p className="helper-copy">
             CRM, operacao e gestao da agencia no mesmo app.
           </p>
@@ -89,15 +81,31 @@ export default async function AdminLayout({
             </Link>
           ))}
         </nav>
+
+        <div className="admin-sidebar-footer">
+          <p className="eyebrow">Sistema vivo</p>
+          <strong>Mekka OS</strong>
+          <p className="helper-copy">
+            Comercial, deals e delivery lendo a mesma memoria operacional.
+          </p>
+        </div>
       </aside>
 
       <div className="admin-content">
         <header className="admin-header">
-          <div>
+          <div className="admin-header-copy">
             <p className="eyebrow">Backoffice Mekka Labs</p>
             <h1>CRM + Delivery + Operacao</h1>
+            <p className="helper-copy">
+              Uma mesa unica para captar sinais, decidir o proximo passo e manter
+              a agencia com ritmo.
+            </p>
           </div>
           <div className="admin-header-actions">
+            <div className="admin-status-pill">
+              <span className="admin-status-dot" />
+              Supabase conectado
+            </div>
             <Link href="/" className="secondary-link">
               Voltar para o site
             </Link>

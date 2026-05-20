@@ -172,6 +172,14 @@ export default async function AdminDashboardPage() {
               {recentLeads.length > 0 ? `${recentLeads.length} leads recentes` : "MVP"}
             </strong>
           </div>
+          <div className="admin-hero-chip">
+            <span>Delivery no radar</span>
+            <strong>
+              {activeProjects.length > 0
+                ? `${activeProjects.length} trabalho(s)`
+                : "Nenhum trabalho"}
+            </strong>
+          </div>
         </div>
       </section>
 
@@ -186,7 +194,7 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section className="admin-columns">
-        <article className="admin-card">
+        <article className="admin-card admin-card-spotlight">
           <p className="eyebrow">Foco do dia</p>
           <h2>Fila de proximas acoes</h2>
           <ul className="bullet-list">
@@ -196,7 +204,7 @@ export default async function AdminDashboardPage() {
           </ul>
         </article>
 
-        <article className="admin-card">
+        <article className="admin-card admin-card-muted">
           <p className="eyebrow">Pipeline</p>
           <h2>Resumo rapido</h2>
           <div className="mini-stats">
@@ -219,7 +227,7 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section className="admin-columns">
-        <article className="admin-card">
+        <article className="admin-card admin-card-spotlight">
           <p className="eyebrow">Acoes rapidas</p>
           <h2>Entradas principais do time</h2>
           <div className="quick-action-grid">
@@ -232,7 +240,7 @@ export default async function AdminDashboardPage() {
           </div>
         </article>
 
-        <article className="admin-card">
+        <article className="admin-card admin-card-muted">
           <p className="eyebrow">Saude operacional</p>
           <h2>O que o sistema esta lendo agora</h2>
           <div className="health-list">

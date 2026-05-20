@@ -130,7 +130,7 @@ export default async function AdminDealsPage({
   return (
     <main className="admin-main">
       <section className="admin-columns admin-columns-top">
-        <article className="admin-card">
+        <article className="admin-card admin-card-spotlight">
           <div className="section-heading">
             <p className="eyebrow">Novo deal</p>
             <h2>Registrar proposta comercial</h2>
@@ -210,7 +210,7 @@ export default async function AdminDealsPage({
           </form>
         </article>
 
-        <article className="admin-card">
+        <article className="admin-card admin-card-muted">
           <div className="section-heading">
             <p className="eyebrow">Forecast</p>
             <h2>Leitura comercial rapida</h2>
@@ -224,7 +224,7 @@ export default async function AdminDealsPage({
         </article>
       </section>
 
-      <section className="admin-card">
+      <section className="admin-card admin-card-surface">
         <div className="section-heading">
           <p className="eyebrow">Deals</p>
           <h2>Propostas e negociações</h2>

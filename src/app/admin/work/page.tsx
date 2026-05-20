@@ -113,7 +113,7 @@ export default async function AdminWorkPage({
   return (
     <main className="admin-main">
       <section className="admin-columns admin-columns-top">
-        <article className="admin-card">
+        <article className="admin-card admin-card-spotlight">
           <div className="section-heading">
             <p className="eyebrow">Novo trabalho</p>
             <h2>Abrir diagnostico ou implantacao</h2>
@@ -198,7 +198,7 @@ export default async function AdminWorkPage({
           </form>
         </article>
 
-        <article className="admin-card">
+        <article className="admin-card admin-card-muted">
           <div className="section-heading">
             <p className="eyebrow">Ritmo de delivery</p>
             <h2>Regra operacional</h2>
@@ -211,7 +211,7 @@ export default async function AdminWorkPage({
         </article>
       </section>
 
-      <section className="admin-card">
+      <section className="admin-card admin-card-surface">
         <div className="section-heading">
           <p className="eyebrow">Delivery</p>
           <h2>Trabalhos em andamento</h2>

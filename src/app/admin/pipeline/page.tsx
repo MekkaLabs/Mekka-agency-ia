@@ -50,7 +50,7 @@ export default async function AdminPipelinePage({
 
   return (
     <main className="admin-main">
-      <section className="admin-card">
+      <section className="admin-card admin-card-surface">
         <div className="section-heading">
           <p className="eyebrow">Pipeline comercial</p>
           <h2>Visao de etapas</h2>

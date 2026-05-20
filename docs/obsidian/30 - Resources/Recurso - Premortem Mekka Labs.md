@@ -9,7 +9,7 @@ Fonte principal: `docs/strategy/premortem.md`
 
 ## Maior risco
 
-A Mekka parecer abstrata, tecnica demais ou ampla demais.
+A Mekka parecer promissora, mas ainda abstrata, ampla demais e pouco inevitavel.
 
 ## Antidoto
 
@@ -17,6 +17,17 @@ A Mekka parecer abstrata, tecnica demais ou ampla demais.
 - oferta de entrada clara
 - modulos de implantacao objetivos
 - recorrencia baseada em backoffice de IA
+- CRM virando ritual operacional
+- proposta comercial virando padrao
+- prova simples e repetivel
+
+## Frentes mais sensiveis
+
+- CTA real e ativo
+- ICP mais explicito
+- diagnostico convertendo em implantacao
+- entrega padronizada
+- menos dependencia do fundador
 
 ## Pergunta de controle
 

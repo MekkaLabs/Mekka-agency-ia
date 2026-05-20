@@ -36,6 +36,7 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 - fallback comercial definido: sem agenda real, o CTA principal continua em `/diagnostico`
 - leads agora podem virar conta e abrir diagnostico direto pelo admin
 - dashboard interno deixou de ser estatico e passou a ler sinais reais do CRM
+- CRM agora aceita notas internas por lead para registrar contexto comercial
 
 ## Referencias
 

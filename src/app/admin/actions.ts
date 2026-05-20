@@ -415,3 +415,51 @@ export async function deleteProject(formData: FormData) {
   touchAdminViews();
   redirect("/admin/work?success=Trabalho%20removido");
 }
+
+export async function createNote(formData: FormData) {
+  const returnPath = getRequiredField(formData, "return_path") || "/admin";
+  ensureSupabase(returnPath);
+
+  const relatedType = getRequiredField(formData, "related_type");
+  const relatedId = getRequiredField(formData, "related_id");
+  const body = getRequiredField(formData, "body");
+
+  if (!relatedType || !relatedId || !body) {
+    redirect(`${returnPath}?error=Nota%20invalida`);
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("notes").insert({
+    related_type: relatedType,
+    related_id: relatedId,
+    body,
+  });
+
+  if (error) {
+    redirect(`${returnPath}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  touchAdminViews();
+  redirect(`${returnPath}?success=Nota%20registrada`);
+}
+
+export async function deleteNote(formData: FormData) {
+  const returnPath = getRequiredField(formData, "return_path") || "/admin";
+  ensureSupabase(returnPath);
+
+  const id = getRequiredField(formData, "id");
+
+  if (!id) {
+    redirect(`${returnPath}?error=Nota%20invalida`);
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("notes").delete().eq("id", id);
+
+  if (error) {
+    redirect(`${returnPath}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  touchAdminViews();
+  redirect(`${returnPath}?success=Nota%20removida`);
+}

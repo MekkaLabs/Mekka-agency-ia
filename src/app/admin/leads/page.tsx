@@ -1,6 +1,8 @@
 import {
   convertLeadToAccount,
+  createNote,
   createLead,
+  deleteNote,
   deleteLead,
   updateLead,
 } from "@/app/admin/actions";
@@ -40,6 +42,10 @@ export default async function AdminLeadsPage({
     next_action: string | null;
     pipeline_stage: string;
   }[] = [];
+  const notesByLead: Record<
+    string,
+    { id: string; body: string; created_at: string }[]
+  > = {};
 
   if (hasSupabaseEnv()) {
     const supabase = await createClient();
@@ -52,6 +58,34 @@ export default async function AdminLeadsPage({
       .limit(50);
 
     leads = data ?? [];
+
+    if (leads.length > 0) {
+      const { data: notes } = await supabase
+        .from("notes")
+        .select("id, related_id, body, created_at")
+        .eq("related_type", "lead")
+        .in(
+          "related_id",
+          leads.map((lead) => lead.id),
+        )
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      for (const note of notes ?? []) {
+        const relatedId = String(note.related_id);
+        const entry = {
+          id: String(note.id),
+          body: String(note.body),
+          created_at: String(note.created_at),
+        };
+
+        if (!notesByLead[relatedId]) {
+          notesByLead[relatedId] = [];
+        }
+
+        notesByLead[relatedId].push(entry);
+      }
+    }
   }
 
   return (
@@ -241,6 +275,49 @@ export default async function AdminLeadsPage({
                   Converter lead
                 </button>
               </form>
+
+              <div className="notes-block">
+                <div className="notes-header">
+                  <strong>Notas internas</strong>
+                  <span>{notesByLead[lead.id]?.length ?? 0}</span>
+                </div>
+
+                <form className="note-form" action={createNote}>
+                  <input type="hidden" name="return_path" value="/admin/leads" />
+                  <input type="hidden" name="related_type" value="lead" />
+                  <input type="hidden" name="related_id" value={lead.id} />
+                  <textarea
+                    name="body"
+                    rows={2}
+                    placeholder="Registrar contexto, objeção, compromisso ou observação"
+                    required
+                  />
+                  <button type="submit" className="ghost-button">
+                    Salvar nota
+                  </button>
+                </form>
+
+                <div className="note-list">
+                  {(notesByLead[lead.id] ?? []).slice(0, 4).map((note) => (
+                    <article key={note.id} className="note-item">
+                      <p>{note.body}</p>
+                      <div className="note-meta">
+                        <span>{new Date(note.created_at).toLocaleDateString("pt-BR")}</span>
+                        <form action={deleteNote}>
+                          <input type="hidden" name="return_path" value="/admin/leads" />
+                          <input type="hidden" name="id" value={note.id} />
+                          <button type="submit" className="ghost-button">
+                            Remover
+                          </button>
+                        </form>
+                      </div>
+                    </article>
+                  ))}
+                  {(notesByLead[lead.id] ?? []).length === 0 ? (
+                    <p className="helper-copy">Nenhuma nota registrada para este lead.</p>
+                  ) : null}
+                </div>
+              </div>
             </article>
           ))}
         </div>

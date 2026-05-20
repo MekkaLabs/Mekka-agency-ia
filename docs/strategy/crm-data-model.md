@@ -101,3 +101,4 @@
 - leads ja podem ser convertidos manualmente em `company`
 - a conversao tambem pode abrir um `project` de `diagnostico`
 - o dashboard do admin passa a ler leads e trabalhos reais do banco
+- leads agora aceitam `notes` internas direto pela interface do CRM

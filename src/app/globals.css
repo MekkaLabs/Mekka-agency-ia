@@ -612,6 +612,41 @@ a {
   font-weight: 700;
 }
 
+.notes-block,
+.note-form,
+.note-list {
+  display: grid;
+  gap: 12px;
+}
+
+.notes-header,
+.note-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.notes-header span,
+.note-meta span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.note-item {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.note-item p {
+  margin: 0;
+  color: var(--muted);
+}
+
 .inline-form {
   grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
   align-items: end;

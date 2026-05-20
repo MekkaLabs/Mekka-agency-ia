@@ -46,6 +46,21 @@ create table if not exists public.projects (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.deals (
+  id uuid primary key default gen_random_uuid(),
+  lead_id uuid references public.leads(id) on delete set null,
+  company_id uuid references public.companies(id) on delete cascade,
+  offer_type text not null,
+  value numeric(12, 2),
+  status text not null default 'rascunho',
+  expected_close_date date,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.projects
+add column if not exists deal_id uuid references public.deals(id) on delete set null;
+
 create table if not exists public.notes (
   id uuid primary key default gen_random_uuid(),
   related_type text not null,
@@ -58,6 +73,7 @@ alter table public.profiles enable row level security;
 alter table public.leads enable row level security;
 alter table public.companies enable row level security;
 alter table public.projects enable row level security;
+alter table public.deals enable row level security;
 alter table public.notes enable row level security;
 
 create policy "internal users can read profiles"
@@ -95,6 +111,13 @@ with check (true);
 
 create policy "internal users can manage projects"
 on public.projects
+for all
+to authenticated
+using (true)
+with check (true);
+
+create policy "internal users can manage deals"
+on public.deals
 for all
 to authenticated
 using (true)

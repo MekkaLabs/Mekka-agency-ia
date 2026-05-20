@@ -1,5 +1,6 @@
 import { hasSupabaseEnv } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
+import { formatCurrencyBRL, leadStageLabels } from "@/lib/crm";
 
 const fallbackTasks = [
   "Responder leads quentes em ate 15 minutos",
@@ -8,19 +9,11 @@ const fallbackTasks = [
   "Padronizar onboarding de Atendimento com IA",
 ];
 
-const leadStageLabels: Record<string, string> = {
-  novo_lead: "Novos leads",
-  contato_iniciado: "Contato iniciado",
-  diagnostico_agendado: "Diagnostico agendado",
-  proposta_enviada: "Proposta enviada",
-  fechado: "Fechado",
-  perdido: "Perdido",
-};
-
 export default async function AdminDashboardPage() {
   let metrics = [
     { label: "Leads novos", value: "0", detail: "capturados no CRM" },
     { label: "Clientes", value: "0", detail: "contas registradas" },
+    { label: "Deals", value: "0", detail: "propostas em acompanhamento" },
     { label: "Trabalhos", value: "0", detail: "diagnosticos e implantacoes" },
     { label: "Setup", value: "MVP", detail: "CRM interno em construcao" },
   ];
@@ -38,13 +31,23 @@ export default async function AdminDashboardPage() {
     next_step: string | null;
   }[] = [];
   let pipelineSummary: { label: string; count: number }[] = [];
+  let openDealValue = "R$ 0,00";
 
   if (hasSupabaseEnv()) {
     const supabase = await createClient();
-    const [leadsRes, companiesRes, projectsRes, recentLeadsRes, projectsDataRes] =
+    const [
+      leadsRes,
+      companiesRes,
+      dealsRes,
+      projectsRes,
+      recentLeadsRes,
+      projectsDataRes,
+      dealsDataRes,
+    ] =
       await Promise.all([
         supabase.from("leads").select("id", { count: "exact", head: true }),
         supabase.from("companies").select("id", { count: "exact", head: true }),
+        supabase.from("deals").select("id", { count: "exact", head: true }),
         supabase.from("projects").select("id", { count: "exact", head: true }),
         supabase
           .from("leads")
@@ -56,10 +59,29 @@ export default async function AdminDashboardPage() {
           .select("id, name, status, next_step")
           .order("created_at", { ascending: false })
           .limit(6),
+        supabase
+          .from("deals")
+          .select("value, status")
+          .order("created_at", { ascending: false })
+          .limit(100),
       ]);
 
     recentLeads = recentLeadsRes.data ?? [];
     activeProjects = projectsDataRes.data ?? [];
+    openDealValue = formatCurrencyBRL(
+      (dealsDataRes.data ?? [])
+        .filter((deal) => !["ganho", "perdido"].includes(String(deal.status)))
+        .reduce((sum, deal) => {
+          const numericValue =
+            typeof deal.value === "number"
+              ? deal.value
+              : deal.value === null
+                ? 0
+                : Number(deal.value);
+
+          return sum + (Number.isFinite(numericValue) ? numericValue : 0);
+        }, 0),
+    );
 
     const stageCounts = recentLeads.reduce<Record<string, number>>((acc, lead) => {
       acc[lead.pipeline_stage] = (acc[lead.pipeline_stage] ?? 0) + 1;
@@ -90,6 +112,11 @@ export default async function AdminDashboardPage() {
         label: "Clientes",
         value: String(companiesRes.count ?? 0),
         detail: "contas registradas",
+      },
+      {
+        label: "Deals",
+        value: String(dealsRes.count ?? 0),
+        detail: `pipeline aberto em ${openDealValue}`,
       },
       {
         label: "Trabalhos",

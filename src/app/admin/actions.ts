@@ -20,12 +20,28 @@ function getOptionalField(formData: FormData, key: string) {
   return value.length > 0 ? value : null;
 }
 
+function getOptionalMoneyField(formData: FormData, key: string) {
+  const value = String(formData.get(key) ?? "").trim();
+
+  if (!value) {
+    return null;
+  }
+
+  const normalized = value.includes(",") && value.includes(".")
+    ? value.replaceAll(".", "").replace(",", ".")
+    : value.replace(",", ".");
+  const numericValue = Number(normalized);
+
+  return Number.isFinite(numericValue) ? numericValue : null;
+}
+
 function touchAdminViews() {
   revalidatePath("/admin");
   revalidatePath("/admin/leads");
   revalidatePath("/admin/clients");
   revalidatePath("/admin/work");
   revalidatePath("/admin/pipeline");
+  revalidatePath("/admin/deals");
 }
 
 async function findOrCreateCompanyFromLead(leadId: string, companyStatus: string) {
@@ -414,6 +430,89 @@ export async function deleteProject(formData: FormData) {
 
   touchAdminViews();
   redirect("/admin/work?success=Trabalho%20removido");
+}
+
+export async function createDeal(formData: FormData) {
+  ensureSupabase("/admin/deals");
+
+  const lead_id = getOptionalField(formData, "lead_id");
+  const company_id = getOptionalField(formData, "company_id");
+  const offer_type = getRequiredField(formData, "offer_type");
+  const value = getOptionalMoneyField(formData, "value");
+  const status = getRequiredField(formData, "status") || "rascunho";
+  const expected_close_date = getOptionalField(formData, "expected_close_date");
+
+  if (!offer_type) {
+    redirect("/admin/deals?error=Tipo%20de%20oferta%20invalido");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("deals").insert({
+    lead_id,
+    company_id,
+    offer_type,
+    value,
+    status,
+    expected_close_date,
+  });
+
+  if (error) {
+    redirect(`/admin/deals?error=${encodeURIComponent(error.message)}`);
+  }
+
+  touchAdminViews();
+  redirect("/admin/deals?success=Deal%20criado");
+}
+
+export async function updateDeal(formData: FormData) {
+  ensureSupabase("/admin/deals");
+
+  const id = getRequiredField(formData, "id");
+  const status = getRequiredField(formData, "status");
+  const value = getOptionalMoneyField(formData, "value");
+  const expected_close_date = getOptionalField(formData, "expected_close_date");
+
+  if (!id || !status) {
+    redirect("/admin/deals?error=Deal%20ou%20status%20invalido");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("deals")
+    .update({
+      status,
+      value,
+      expected_close_date,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) {
+    redirect(`/admin/deals?error=${encodeURIComponent(error.message)}`);
+  }
+
+  touchAdminViews();
+  redirect("/admin/deals?success=Deal%20atualizado");
+}
+
+export async function deleteDeal(formData: FormData) {
+  ensureSupabase("/admin/deals");
+
+  const id = getRequiredField(formData, "id");
+
+  if (!id) {
+    redirect("/admin/deals?error=Deal%20invalido");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("deals").delete().eq("id", id);
+
+  if (error) {
+    redirect(`/admin/deals?error=${encodeURIComponent(error.message)}`);
+  }
+
+  touchAdminViews();
+  redirect("/admin/deals?success=Deal%20removido");
 }
 
 export async function createNote(formData: FormData) {

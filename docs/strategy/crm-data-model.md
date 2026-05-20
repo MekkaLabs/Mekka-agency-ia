@@ -55,7 +55,9 @@
 - offer_type
 - value
 - status
-- close_date
+- expected_close_date
+- created_at
+- updated_at
 
 ### projects
 
@@ -102,3 +104,5 @@
 - a conversao tambem pode abrir um `project` de `diagnostico`
 - o dashboard do admin passa a ler leads e trabalhos reais do banco
 - leads agora aceitam `notes` internas direto pela interface do CRM
+- o CRM agora tem filtros e busca em leads, contas, trabalhos e pipeline
+- deals agora existem como entidade operacional no admin e no schema SQL

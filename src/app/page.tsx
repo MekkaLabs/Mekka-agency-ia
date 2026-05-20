@@ -198,11 +198,16 @@ export default function Home() {
             ))}
           </ul>
           <div className="hero-actions">
-            <a href="/diagnostico" className="primary-link">
-              Enviar diagnostico
+            <a href={primaryCtaHref} className="primary-link">
+              {primaryCtaLabel}
             </a>
-            <a href="/login" className="secondary-link">
-              Entrar no backoffice
+            <a
+              href={secondaryCtaHref}
+              target={secondaryCtaHref.startsWith("http") ? "_blank" : undefined}
+              rel={secondaryCtaHref.startsWith("http") ? "noreferrer" : undefined}
+              className="secondary-link"
+            >
+              {secondaryCtaLabel}
             </a>
           </div>
         </div>

@@ -23,11 +23,12 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 
 ## Backlog imediato
 
-- [ ] revisar copy da home
+- [ ] redesenhar UX/UI do site institucional inteiro
+- [ ] adicionar animacoes e transicoes do site
+- [ ] evoluir UX/UI do dashboard admin
+- [ ] aprofundar backend e frontend do produto
 - [ ] subir projeto na Vercel
 - [ ] cortar DNS do dominio
-- [ ] criar proposta padrao do Diagnostico de Receita + IA
-- [ ] mapear base antiga para outreach
 
 ## Atualizacoes recentes
 
@@ -37,6 +38,9 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 - leads agora podem virar conta e abrir diagnostico direto pelo admin
 - dashboard interno deixou de ser estatico e passou a ler sinais reais do CRM
 - CRM agora aceita notas internas por lead para registrar contexto comercial
+- CRM agora tem busca e filtros em leads, contas, trabalhos e pipeline
+- entidade `deals` criada no schema e no admin para acompanhar propostas e forecast
+- checklist operacional do funil ponta a ponta documentado em `docs/ops/funnel-validation-checklist.md`
 
 ## Referencias
 

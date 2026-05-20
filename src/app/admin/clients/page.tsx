@@ -5,19 +5,14 @@ import {
 } from "@/app/admin/actions";
 import { hasSupabaseEnv } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
-
-const companyStatuses = [
-  "lead",
-  "diagnostico",
-  "proposta",
-  "cliente_ativo",
-  "pausado",
-];
+import { companyStatuses } from "@/lib/crm";
 
 type AdminClientsPageProps = {
   searchParams: Promise<{
     error?: string;
     success?: string;
+    q?: string;
+    status?: string;
   }>;
 };
 
@@ -25,6 +20,12 @@ export default async function AdminClientsPage({
   searchParams,
 }: AdminClientsPageProps) {
   const params = await searchParams;
+  const queryText = params.q?.trim() ?? "";
+  const selectedStatus =
+    params.status &&
+    companyStatuses.includes(params.status as (typeof companyStatuses)[number])
+      ? params.status
+      : "all";
 
   let clients: {
     id: string;
@@ -37,12 +38,28 @@ export default async function AdminClientsPage({
 
   if (hasSupabaseEnv()) {
     const supabase = await createClient();
-    const { data } = await supabase
+    let query = supabase
       .from("companies")
       .select("id, name, segment, size, website, status")
       .order("created_at", { ascending: false })
-      .limit(50);
+      .limit(100);
 
+    if (queryText) {
+      query = query.or(
+        [
+          `name.ilike.%${queryText}%`,
+          `segment.ilike.%${queryText}%`,
+          `size.ilike.%${queryText}%`,
+          `website.ilike.%${queryText}%`,
+        ].join(","),
+      );
+    }
+
+    if (selectedStatus !== "all") {
+      query = query.eq("status", selectedStatus);
+    }
+
+    const { data } = await query;
     clients = data ?? [];
   }
 
@@ -117,14 +134,54 @@ export default async function AdminClientsPage({
         <div className="section-heading">
           <p className="eyebrow">Clientes</p>
           <h2>Contas registradas</h2>
+          <p className="helper-copy">
+            Busque por nome, segmento ou site para encontrar contas mais rapido.
+          </p>
         </div>
+
+        <form className="admin-form filter-bar" method="get">
+          <div className="form-grid two-up">
+            <label>
+              <span>Buscar</span>
+              <input
+                name="q"
+                type="search"
+                defaultValue={queryText}
+                placeholder="Empresa, segmento, porte ou website"
+              />
+            </label>
+            <label>
+              <span>Status</span>
+              <select name="status" defaultValue={selectedStatus}>
+                <option value="all">Todos</option>
+                {companyStatuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <div className="filter-actions">
+            <button type="submit" className="secondary-link auth-button">
+              Aplicar filtros
+            </button>
+            <a href="/admin/clients" className="ghost-button">
+              Limpar filtros
+            </a>
+            <span className="helper-copy">
+              {clients.length} conta(s) encontrada(s)
+            </span>
+          </div>
+        </form>
 
         <div className="record-list">
           {clients.length === 0 ? (
             <article className="record-card">
               <p className="helper-copy">
-                Nenhuma conta cadastrada ainda. O fluxo ideal e promover leads
-                qualificados para empresa e depois abrir trabalhos.
+                Nenhuma conta cadastrada com os filtros atuais. O fluxo ideal e
+                promover leads qualificados para empresa e depois abrir deals e
+                trabalhos.
               </p>
             </article>
           ) : null}

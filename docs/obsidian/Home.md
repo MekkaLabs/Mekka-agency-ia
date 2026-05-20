@@ -4,7 +4,7 @@ type: dashboard
 tags: [dashboard, home, mekka-labs]
 project: mekka-labs-agency-ai
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-05-20
 ---
 
 # Mekka Labs — Segundo Cerebro
@@ -42,10 +42,10 @@ Relancamento da Mekka Labs como agencia de growth, criacao comercial e sistemas 
 
 ## Prioridades imediatas
 
-1. Corrigir DNS e SSL do dominio.
-2. Subir o novo site na Vercel.
-3. Definir CTA principal e tres ofertas de entrada.
-4. Organizar outreach e propostas para a base antiga.
+1. Evoluir UX/UI e animacoes do site institucional.
+2. Melhorar dashboard, backend e frontend do produto.
+3. Corrigir DNS e SSL do dominio.
+4. Subir o novo site na Vercel.
 
 ## Notas recentes
 

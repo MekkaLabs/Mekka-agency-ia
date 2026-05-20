@@ -41,7 +41,7 @@ Relancar a Mekka Labs com um novo site, nova tese comercial e stack operacional 
 ## Referencias
 
 - [[Home]]
-- [[Handoff - Sprint 2 CRM e CTA]]
+- [[Handoff - Projeto Mekka Labs]]
 - [[50 - MOCs/MOC - Site, Dominio & Operacao]]
 - [[50 - MOCs/MOC - IA & Squads]]
 - [[30 - Resources/Recurso - Proposta de Valor Mekka Labs]]

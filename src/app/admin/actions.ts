@@ -107,14 +107,28 @@ export async function markLeadResponded(
   }
 
   const supabase = await createClient();
-  const { error } = await supabase
+  // Le first_response_at atual para nao sobrescrever em respostas posteriores.
+  const { data: current, error: readErr } = await supabase
     .from("leads")
-    .update({
-      pipeline_stage: "em_contato",
-      next_action: "Aguardando retorno do lead",
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", leadId);
+    .select("first_response_at")
+    .eq("id", leadId)
+    .single();
+
+  if (readErr) {
+    return { status: "error", message: `Erro ao ler lead: ${readErr.message}` };
+  }
+
+  const now = new Date().toISOString();
+  const update: Record<string, unknown> = {
+    pipeline_stage: "em_contato",
+    next_action: "Aguardando retorno do lead",
+    updated_at: now,
+  };
+  if (!current?.first_response_at) {
+    update.first_response_at = now;
+  }
+
+  const { error } = await supabase.from("leads").update(update).eq("id", leadId);
 
   if (error) {
     return { status: "error", message: `Erro: ${error.message}` };

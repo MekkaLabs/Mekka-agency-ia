@@ -24,6 +24,15 @@ function formatRelative(iso: string) {
   return `${diffDay}d`;
 }
 
+function formatDuration(ms: number) {
+  const min = Math.round(ms / 60000);
+  if (min < 60) return `${min} min`;
+  const hr = Math.round((min / 60) * 10) / 10;
+  if (hr < 48) return `${hr}h`;
+  const days = Math.round((hr / 24) * 10) / 10;
+  return `${days}d`;
+}
+
 export default async function AdminDashboard() {
   if (!hasSupabaseEnv()) return null;
   const supabase = await createClient();
@@ -33,10 +42,15 @@ export default async function AdminDashboard() {
     now.getMonth(),
     now.getDate(),
   ).toISOString();
-  const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+  const monthStart = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1,
+  ).toISOString();
+  const hourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
 
-  const [newTodayQuery, activeQuery, coldQuery, queueQuery] = await Promise.all(
-    [
+  const [newTodayQuery, activeQuery, waitingQuery, ttfrQuery, queueQuery] =
+    await Promise.all([
       supabase
         .from("leads")
         .select("id", { count: "exact", head: true })
@@ -48,40 +62,67 @@ export default async function AdminDashboard() {
       supabase
         .from("leads")
         .select("id", { count: "exact", head: true })
+        .is("first_response_at", null)
         .not("pipeline_stage", "in", "(fechado,descartado)")
-        .lt("updated_at", dayAgo),
+        .lt("created_at", hourAgo),
       supabase
         .from("leads")
-        .select("id,name,company_name,next_action,pipeline_stage,updated_at")
+        .select("created_at,first_response_at")
+        .not("first_response_at", "is", null)
+        .gte("first_response_at", monthStart),
+      supabase
+        .from("leads")
+        .select(
+          "id,name,company_name,next_action,pipeline_stage,updated_at,created_at,first_response_at",
+        )
         .not("next_action", "is", null)
         .not("pipeline_stage", "in", "(fechado,descartado)")
         .order("updated_at", { ascending: true })
         .limit(5),
-    ],
-  );
+    ]);
 
   const newToday = newTodayQuery.count ?? 0;
   const active = activeQuery.count ?? 0;
-  const cold = coldQuery.count ?? 0;
+  const waiting = waitingQuery.count ?? 0;
   const queue = queueQuery.data ?? [];
+  const nowMs = now.getTime();
+
+  // Media de TTFR no mes corrente.
+  const ttfrSamples = ttfrQuery.data ?? [];
+  let ttfrLabel = "—";
+  if (ttfrSamples.length > 0) {
+    const totalMs = ttfrSamples.reduce((sum, l) => {
+      const created = new Date(l.created_at).getTime();
+      const responded = new Date(
+        l.first_response_at as unknown as string,
+      ).getTime();
+      return sum + Math.max(0, responded - created);
+    }, 0);
+    ttfrLabel = formatDuration(totalMs / ttfrSamples.length);
+  }
 
   return (
     <div className="space-y-10">
       <header>
         <h1 className="text-2xl font-semibold">Dashboard</h1>
         <p className="mt-1 text-sm text-neutral-600">
-          Os tres numeros que importam hoje e a fila do que precisa de
+          Os quatro numeros que importam hoje e a fila do que precisa de
           resposta.
         </p>
       </header>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Novos hoje" value={newToday} />
-        <StatCard label="Ativos" value={active} />
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Novos hoje" value={String(newToday)} />
+        <StatCard label="Ativos" value={String(active)} />
         <StatCard
-          label="Esfriando (+24h sem update)"
-          value={cold}
-          tone={cold > 0 ? "warn" : "neutral"}
+          label="Aguardando 1a resposta (>1h)"
+          value={String(waiting)}
+          tone={waiting > 0 ? "warn" : "neutral"}
+        />
+        <StatCard
+          label="Tempo medio de resposta (mes)"
+          value={ttfrLabel}
+          sub={`${ttfrSamples.length} respondidos`}
         />
       </section>
 
@@ -108,31 +149,46 @@ export default async function AdminDashboard() {
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-neutral-200 rounded-md border border-neutral-200 bg-white">
-            {queue.map((lead) => (
-              <li key={lead.id}>
-                <Link
-                  href={`/admin/leads/${lead.id}`}
-                  className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-neutral-50"
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="truncate font-medium">{lead.name}</span>
-                      <span className="text-neutral-400">&middot;</span>
-                      <span className="truncate text-neutral-600">
-                        {lead.company_name}
-                      </span>
+            {queue.map((lead) => {
+              const waitingHours =
+                lead.first_response_at === null
+                  ? Math.round(
+                      (nowMs - new Date(lead.created_at).getTime()) / 3600000,
+                    )
+                  : null;
+              return (
+                <li key={lead.id}>
+                  <Link
+                    href={`/admin/leads/${lead.id}`}
+                    className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-neutral-50"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate font-medium">{lead.name}</span>
+                        <span className="text-neutral-400">&middot;</span>
+                        <span className="truncate text-neutral-600">
+                          {lead.company_name}
+                        </span>
+                        {waitingHours !== null && waitingHours >= 1 ? (
+                          <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-xs text-red-700">
+                            aguardando {waitingHours}h
+                          </span>
+                        ) : null}
+                      </div>
+                      <p className="mt-0.5 truncate text-sm text-neutral-500">
+                        {lead.next_action}
+                      </p>
                     </div>
-                    <p className="mt-0.5 truncate text-sm text-neutral-500">
-                      {lead.next_action}
-                    </p>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-3 text-xs text-neutral-400">
-                    <span>{STAGE_LABELS[lead.pipeline_stage] ?? lead.pipeline_stage}</span>
-                    <span>{formatRelative(lead.updated_at)}</span>
-                  </div>
-                </Link>
-              </li>
-            ))}
+                    <div className="flex shrink-0 items-center gap-3 text-xs text-neutral-400">
+                      <span>
+                        {STAGE_LABELS[lead.pipeline_stage] ?? lead.pipeline_stage}
+                      </span>
+                      <span>{formatRelative(lead.updated_at)}</span>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>
@@ -143,10 +199,12 @@ export default async function AdminDashboard() {
 function StatCard({
   label,
   value,
+  sub,
   tone = "neutral",
 }: {
   label: string;
-  value: number;
+  value: string;
+  sub?: string;
   tone?: "neutral" | "warn";
 }) {
   return (
@@ -165,6 +223,9 @@ function StatCard({
       >
         {value}
       </p>
+      {sub ? (
+        <p className="mt-1 text-xs text-neutral-400">{sub}</p>
+      ) : null}
     </div>
   );
 }

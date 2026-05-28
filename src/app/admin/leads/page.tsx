@@ -36,7 +36,7 @@ export default async function LeadsList({
   let query = supabase
     .from("leads")
     .select(
-      "id,name,company_name,email,pipeline_stage,next_action,created_at,updated_at",
+      "id,name,company_name,email,pipeline_stage,next_action,created_at,updated_at,first_response_at",
     )
     .order("created_at", { ascending: false })
     .limit(100);
@@ -50,6 +50,9 @@ export default async function LeadsList({
 
   const { data, error } = await query;
   const leads = data ?? [];
+  // Server component runs once per request; capturing now is deterministic.
+  // eslint-disable-next-line react-hooks/purity
+  const nowMs = Date.now();
 
   return (
     <div className="space-y-8">
@@ -149,33 +152,47 @@ export default async function LeadsList({
         </div>
       ) : (
         <ul className="divide-y divide-neutral-200 rounded-md border border-neutral-200 bg-white">
-          {leads.map((lead) => (
-            <li key={lead.id}>
-              <Link
-                href={`/admin/leads/${lead.id}`}
-                className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-neutral-50"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="truncate font-medium">{lead.name}</span>
-                    <span className="text-neutral-400">&middot;</span>
-                    <span className="truncate text-neutral-600">
-                      {lead.company_name}
+          {leads.map((lead) => {
+            const waitingHours =
+              lead.first_response_at === null &&
+              !["fechado", "descartado"].includes(lead.pipeline_stage)
+                ? Math.round(
+                    (nowMs - new Date(lead.created_at).getTime()) / 3600000,
+                  )
+                : null;
+            return (
+              <li key={lead.id}>
+                <Link
+                  href={`/admin/leads/${lead.id}`}
+                  className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-neutral-50"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate font-medium">{lead.name}</span>
+                      <span className="text-neutral-400">&middot;</span>
+                      <span className="truncate text-neutral-600">
+                        {lead.company_name}
+                      </span>
+                      {waitingHours !== null && waitingHours >= 1 ? (
+                        <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-xs text-red-700">
+                          aguardando {waitingHours}h
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="mt-0.5 truncate text-sm text-neutral-500">
+                      {lead.next_action ?? lead.email}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3 text-xs">
+                    <StageBadge stage={lead.pipeline_stage} />
+                    <span className="text-neutral-400">
+                      {formatDate(lead.created_at)}
                     </span>
                   </div>
-                  <p className="mt-0.5 truncate text-sm text-neutral-500">
-                    {lead.next_action ?? lead.email}
-                  </p>
-                </div>
-                <div className="flex shrink-0 items-center gap-3 text-xs">
-                  <StageBadge stage={lead.pipeline_stage} />
-                  <span className="text-neutral-400">
-                    {formatDate(lead.created_at)}
-                  </span>
-                </div>
-              </Link>
-            </li>
-          ))}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

@@ -2,24 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/env";
-import {
-  addLeadNote,
-  markLeadResponded,
-  updateLeadNextAction,
-  updateLeadStage,
-  type LeadStage,
-} from "../../actions";
 import { LeadEditForm } from "./_components/lead-edit-form";
-
-const STAGE_OPTIONS: { value: LeadStage; label: string }[] = [
-  { value: "novo_lead", label: "Novo" },
-  { value: "em_contato", label: "Em contato" },
-  { value: "qualificado", label: "Qualificado" },
-  { value: "diagnostico_agendado", label: "Diagnostico" },
-  { value: "proposta_enviada", label: "Proposta" },
-  { value: "fechado", label: "Fechado" },
-  { value: "descartado", label: "Descartado" },
-];
+import { LeadStageForm } from "./_components/lead-stage-form";
+import { LeadNextActionForm } from "./_components/lead-next-action-form";
+import { LeadRespondButton } from "./_components/lead-respond-button";
+import { LeadNoteForm } from "./_components/lead-note-form";
 
 type Note = {
   id: string;
@@ -49,29 +36,6 @@ export default async function LeadDetail({
   if (leadRes.error || !leadRes.data) notFound();
   const lead = leadRes.data;
   const notes: Note[] = notesRes.data ?? [];
-
-  async function changeStage(formData: FormData) {
-    "use server";
-    const stage = String(formData.get("stage") ?? "") as LeadStage;
-    if (stage) await updateLeadStage(id, stage);
-  }
-
-  async function changeNextAction(formData: FormData) {
-    "use server";
-    const value = String(formData.get("next_action") ?? "");
-    await updateLeadNextAction(id, value);
-  }
-
-  async function respond() {
-    "use server";
-    await markLeadResponded(id);
-  }
-
-  async function createNote(formData: FormData) {
-    "use server";
-    const body = String(formData.get("body") ?? "");
-    await addLeadNote(id, body);
-  }
 
   return (
     <div className="space-y-8">
@@ -119,59 +83,9 @@ export default async function LeadDetail({
           Etapa e proxima acao
         </h2>
         <div className="mt-4 grid gap-4 md:grid-cols-[1fr_1fr_auto]">
-          <form action={changeStage} className="flex items-end gap-2">
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-neutral-600">
-                Etapa
-              </label>
-              <select
-                name="stage"
-                defaultValue={lead.pipeline_stage}
-                className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
-              >
-                {STAGE_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              type="submit"
-              className="rounded-md border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50"
-            >
-              Salvar
-            </button>
-          </form>
-
-          <form action={changeNextAction} className="flex items-end gap-2">
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-neutral-600">
-                Proxima acao
-              </label>
-              <input
-                name="next_action"
-                defaultValue={lead.next_action ?? ""}
-                placeholder="ex: ligar amanha 10h"
-                className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
-              />
-            </div>
-            <button
-              type="submit"
-              className="rounded-md border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50"
-            >
-              Salvar
-            </button>
-          </form>
-
-          <form action={respond} className="md:self-end">
-            <button
-              type="submit"
-              className="w-full rounded-md bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800"
-            >
-              Marcar respondido
-            </button>
-          </form>
+          <LeadStageForm leadId={lead.id} current={lead.pipeline_stage} />
+          <LeadNextActionForm leadId={lead.id} current={lead.next_action} />
+          <LeadRespondButton leadId={lead.id} />
         </div>
       </section>
 
@@ -180,26 +94,9 @@ export default async function LeadDetail({
           Notas internas
         </h2>
 
-        <form
-          action={createNote}
-          className="mt-4 rounded-md border border-neutral-200 bg-white p-4"
-        >
-          <textarea
-            name="body"
-            rows={3}
-            required
-            placeholder="o que voce conversou, decidiu ou precisa lembrar..."
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
-          />
-          <div className="mt-3 flex justify-end">
-            <button
-              type="submit"
-              className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800"
-            >
-              Adicionar nota
-            </button>
-          </div>
-        </form>
+        <div className="mt-4">
+          <LeadNoteForm leadId={lead.id} />
+        </div>
 
         {notes.length === 0 ? (
           <p className="mt-4 rounded-md border border-dashed border-neutral-300 bg-white p-5 text-sm text-neutral-500">

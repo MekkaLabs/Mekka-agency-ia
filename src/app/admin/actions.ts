@@ -31,36 +31,82 @@ function normalizePhone(value: string): string | null {
   return cleaned ? cleaned : null;
 }
 
-export async function updateLeadStage(leadId: string, stage: LeadStage) {
-  const supabase = await requireSupabase();
+const VALID_STAGES: LeadStage[] = [
+  "novo_lead",
+  "em_contato",
+  "qualificado",
+  "diagnostico_agendado",
+  "proposta_enviada",
+  "fechado",
+  "descartado",
+];
+
+export async function updateLeadStage(
+  leadId: string,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const stage = String(formData.get("stage") ?? "") as LeadStage;
+  if (!VALID_STAGES.includes(stage)) {
+    return { status: "error", message: "Etapa invalida." };
+  }
+  if (!hasSupabaseEnv()) {
+    return { status: "error", message: "Supabase nao configurado." };
+  }
+
+  const supabase = await createClient();
   const { error } = await supabase
     .from("leads")
     .update({ pipeline_stage: stage, updated_at: new Date().toISOString() })
     .eq("id", leadId);
 
-  if (error) throw error;
+  if (error) {
+    return { status: "error", message: `Erro: ${error.message}` };
+  }
+
   revalidatePath("/admin");
   revalidatePath("/admin/leads");
   revalidatePath(`/admin/leads/${leadId}`);
+  return { status: "ok", message: "Etapa salva." };
 }
 
-export async function updateLeadNextAction(leadId: string, nextAction: string) {
-  const supabase = await requireSupabase();
+export async function updateLeadNextAction(
+  leadId: string,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const value = String(formData.get("next_action") ?? "").trim();
+  if (!hasSupabaseEnv()) {
+    return { status: "error", message: "Supabase nao configurado." };
+  }
+
+  const supabase = await createClient();
   const { error } = await supabase
     .from("leads")
     .update({
-      next_action: nextAction || null,
+      next_action: value || null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", leadId);
 
-  if (error) throw error;
+  if (error) {
+    return { status: "error", message: `Erro: ${error.message}` };
+  }
+
   revalidatePath("/admin");
   revalidatePath(`/admin/leads/${leadId}`);
+  return { status: "ok", message: "Proxima acao salva." };
 }
 
-export async function markLeadResponded(leadId: string) {
-  const supabase = await requireSupabase();
+export async function markLeadResponded(
+  leadId: string,
+  _prev: ActionState,
+): Promise<ActionState> {
+  if (!hasSupabaseEnv()) {
+    return { status: "error", message: "Supabase nao configurado." };
+  }
+
+  const supabase = await createClient();
   const { error } = await supabase
     .from("leads")
     .update({
@@ -70,25 +116,42 @@ export async function markLeadResponded(leadId: string) {
     })
     .eq("id", leadId);
 
-  if (error) throw error;
+  if (error) {
+    return { status: "error", message: `Erro: ${error.message}` };
+  }
+
   revalidatePath("/admin");
   revalidatePath("/admin/leads");
   revalidatePath(`/admin/leads/${leadId}`);
+  return { status: "ok", message: "Marcado como respondido." };
 }
 
-export async function addLeadNote(leadId: string, body: string) {
-  const trimmed = body.trim();
-  if (!trimmed) return;
+export async function addLeadNote(
+  leadId: string,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const body = String(formData.get("body") ?? "").trim();
+  if (!body) {
+    return { status: "error", message: "Escreva alguma coisa antes de salvar." };
+  }
+  if (!hasSupabaseEnv()) {
+    return { status: "error", message: "Supabase nao configurado." };
+  }
 
-  const supabase = await requireSupabase();
+  const supabase = await createClient();
   const { error } = await supabase.from("notes").insert({
     related_type: "lead",
     related_id: leadId,
-    body: trimmed,
+    body,
   });
 
-  if (error) throw error;
+  if (error) {
+    return { status: "error", message: `Erro: ${error.message}` };
+  }
+
   revalidatePath(`/admin/leads/${leadId}`);
+  return { status: "ok", message: "Nota adicionada." };
 }
 
 export async function createLeadInternal(

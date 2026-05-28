@@ -9,6 +9,7 @@ import {
   updateLeadStage,
   type LeadStage,
 } from "../../actions";
+import { LeadEditForm } from "./_components/lead-edit-form";
 
 const STAGE_OPTIONS: { value: LeadStage; label: string }[] = [
   { value: "novo_lead", label: "Novo" },
@@ -85,29 +86,31 @@ export default async function LeadDetail({
         <p className="text-neutral-600">{lead.company_name}</p>
       </div>
 
-      <section className="grid gap-6 md:grid-cols-2">
+      <section className="grid gap-6 md:grid-cols-[2fr_1fr]">
         <div className="rounded-md border border-neutral-200 bg-white p-5">
           <h2 className="text-xs uppercase tracking-[0.18em] text-neutral-500">
-            Contato
+            Dados do lead
           </h2>
-          <dl className="mt-3 space-y-2 text-sm">
-            <Row label="Email" value={lead.email} />
-            <Row label="Telefone" value={lead.phone ?? "—"} />
-            <Row label="Origem" value={lead.source} />
-            <Row
-              label="Criado em"
-              value={new Date(lead.created_at).toLocaleString("pt-BR")}
-            />
-          </dl>
+          <div className="mt-4">
+            <LeadEditForm lead={lead} />
+          </div>
         </div>
 
         <div className="rounded-md border border-neutral-200 bg-white p-5">
           <h2 className="text-xs uppercase tracking-[0.18em] text-neutral-500">
-            Dor declarada
+            Meta
           </h2>
-          <p className="mt-3 whitespace-pre-wrap text-sm text-neutral-700">
-            {lead.pain_point ?? <em className="text-neutral-400">vazio</em>}
-          </p>
+          <dl className="mt-3 space-y-2 text-sm">
+            <Row label="Origem" value={lead.source} />
+            <Row
+              label="Criado"
+              value={new Date(lead.created_at).toLocaleString("pt-BR")}
+            />
+            <Row
+              label="Atualizado"
+              value={new Date(lead.updated_at).toLocaleString("pt-BR")}
+            />
+          </dl>
         </div>
       </section>
 

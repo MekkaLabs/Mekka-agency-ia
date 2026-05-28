@@ -53,7 +53,7 @@ export default async function LeadsList({
 
   return (
     <div className="space-y-8">
-      <header className="flex items-baseline justify-between">
+      <header className="flex flex-wrap items-baseline justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Leads</h1>
           <p className="mt-1 text-sm text-neutral-600">
@@ -62,6 +62,12 @@ export default async function LeadsList({
             {q ? ` para "${q}"` : ""}.
           </p>
         </div>
+        <Link
+          href="/admin/leads/novo"
+          className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800"
+        >
+          + Novo lead
+        </Link>
       </header>
 
       <form
@@ -118,9 +124,29 @@ export default async function LeadsList({
           Erro ao carregar leads: {error.message}
         </p>
       ) : leads.length === 0 ? (
-        <p className="rounded-md border border-dashed border-neutral-300 bg-white p-6 text-sm text-neutral-500">
-          Nenhum lead encontrado. Quando alguem preencher o form da home, aparece aqui.
-        </p>
+        <div className="rounded-md border border-dashed border-neutral-300 bg-white p-8 text-center">
+          <p className="text-sm text-neutral-600">
+            {q || stage
+              ? "Nenhum lead encontrado com esses filtros."
+              : "Nenhum lead ainda. Quem chegou pelo site cai aqui automatico, ou cadastre manualmente."}
+          </p>
+          <div className="mt-4 flex justify-center gap-3">
+            {(q || stage) && (
+              <Link
+                href="/admin/leads"
+                className="rounded-md border border-neutral-300 px-4 py-2 text-sm hover:bg-neutral-50"
+              >
+                Limpar filtros
+              </Link>
+            )}
+            <Link
+              href="/admin/leads/novo"
+              className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800"
+            >
+              + Cadastrar lead manualmente
+            </Link>
+          </div>
+        </div>
       ) : (
         <ul className="divide-y divide-neutral-200 rounded-md border border-neutral-200 bg-white">
           {leads.map((lead) => (

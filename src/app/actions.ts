@@ -9,6 +9,15 @@ export type CaptureLeadState = {
   message?: string;
 };
 
+// Regex minimo defensivo: estrutura local@dominio.tld, sem espacos.
+// Nao tenta validar 100% do RFC 5322 — so filtrar lixo obvio do form publico.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function cleanPhone(raw: string): string | null {
+  const cleaned = raw.replace(/[^\d+()\-\s]/g, "").trim();
+  return cleaned.length >= 8 ? cleaned : null;
+}
+
 export async function captureLead(
   _prev: CaptureLeadState,
   formData: FormData,
@@ -16,13 +25,27 @@ export async function captureLead(
   const name = String(formData.get("name") ?? "").trim();
   const company = String(formData.get("company") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
-  const phone = String(formData.get("phone") ?? "").trim() || null;
+  const phone = cleanPhone(String(formData.get("phone") ?? ""));
   const painPoint = String(formData.get("pain_point") ?? "").trim() || null;
 
   if (!name || !company || !email) {
     return {
       status: "error",
       message: "Preencha nome, empresa e email.",
+    };
+  }
+
+  if (!EMAIL_RE.test(email)) {
+    return {
+      status: "error",
+      message: "Email parece invalido. Confira e tente de novo.",
+    };
+  }
+
+  if (name.length > 120 || company.length > 120 || email.length > 254) {
+    return {
+      status: "error",
+      message: "Algum campo passou do tamanho permitido.",
     };
   }
 

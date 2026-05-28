@@ -48,8 +48,14 @@ export async function signIn(
 
 export async function signOut(): Promise<void> {
   if (hasSupabaseEnv()) {
-    const supabase = await createClient();
-    await supabase.auth.signOut();
+    try {
+      const supabase = await createClient();
+      await supabase.auth.signOut();
+    } catch (e) {
+      // Nao queremos travar o logout se o Supabase falhar transiente.
+      // O redirect abaixo derruba a sessao do client de qualquer forma.
+      console.error("[signOut] erro ignorado durante signOut", e);
+    }
   }
   redirect("/login");
 }

@@ -63,14 +63,19 @@ export default async function AdminLayout({
               </Link>
             </nav>
           </div>
-          <form action={signOut}>
-            <button
-              type="submit"
-              className="text-sm text-neutral-500 hover:text-neutral-900"
-            >
-              Sair
-            </button>
-          </form>
+          <div className="flex items-center gap-4">
+            <span className="hidden text-xs text-neutral-500 sm:inline">
+              {user.email}
+            </span>
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="text-sm text-neutral-500 hover:text-neutral-900"
+              >
+                Sair
+              </button>
+            </form>
+          </div>
         </div>
       </header>
       <div className="mx-auto max-w-5xl px-6 py-10">{children}</div>

@@ -6,6 +6,13 @@ import {
   type ActionState,
   type LeadStage,
 } from "../../../actions";
+import {
+  fieldCls,
+  labelCls,
+  secondaryBtn,
+  errorMsgSm,
+  okMsgSm,
+} from "../../_components/form-styles";
 
 const initialState: ActionState = { status: "idle" };
 
@@ -31,48 +38,25 @@ export function LeadStageForm({
 
   return (
     <form action={formAction} className="space-y-2">
-      <label className="block text-xs font-medium text-neutral-600">
-        Etapa
-      </label>
+      <label className={labelCls}>Etapa</label>
       <div className="flex items-stretch gap-2">
-        <select
-          name="stage"
-          defaultValue={current}
-          className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
-        >
+        <select name="stage" defaultValue={current} className={`${fieldCls} mt-0`}>
           {STAGES.map((o) => (
-            <option key={o.value} value={o.value}>
+            <option key={o.value} value={o.value} className="bg-elevated">
               {o.label}
             </option>
           ))}
         </select>
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-md border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
-        >
+        <button type="submit" disabled={pending} className={secondaryBtn}>
           {pending ? "..." : "Salvar"}
         </button>
       </div>
-      <FormMessage state={state} />
+      {state.status === "error" && state.message ? (
+        <p className={errorMsgSm}>{state.message}</p>
+      ) : null}
+      {state.status === "ok" && state.message ? (
+        <p className={okMsgSm}>{state.message}</p>
+      ) : null}
     </form>
   );
-}
-
-function FormMessage({ state }: { state: ActionState }) {
-  if (state.status === "error" && state.message) {
-    return (
-      <p className="rounded-md bg-red-50 px-2 py-1 text-xs text-red-700">
-        {state.message}
-      </p>
-    );
-  }
-  if (state.status === "ok" && state.message) {
-    return (
-      <p className="rounded-md bg-emerald-50 px-2 py-1 text-xs text-emerald-700">
-        {state.message}
-      </p>
-    );
-  }
-  return null;
 }

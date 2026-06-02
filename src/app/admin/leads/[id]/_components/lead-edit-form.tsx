@@ -2,6 +2,13 @@
 
 import { useActionState } from "react";
 import { updateLeadCore, type ActionState } from "../../../actions";
+import {
+  fieldCls,
+  labelCls,
+  secondaryBtn,
+  errorMsg,
+  okMsg,
+} from "../../_components/form-styles";
 
 const initialState: ActionState = { status: "idle" };
 
@@ -22,7 +29,7 @@ export function LeadEditForm({ lead }: { lead: Lead }) {
     <form action={formAction} className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium">
+          <label htmlFor="name" className={labelCls}>
             Nome
           </label>
           <input
@@ -31,11 +38,11 @@ export function LeadEditForm({ lead }: { lead: Lead }) {
             type="text"
             required
             defaultValue={lead.name}
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+            className={fieldCls}
           />
         </div>
         <div>
-          <label htmlFor="company" className="block text-sm font-medium">
+          <label htmlFor="company" className={labelCls}>
             Empresa
           </label>
           <input
@@ -44,14 +51,14 @@ export function LeadEditForm({ lead }: { lead: Lead }) {
             type="text"
             required
             defaultValue={lead.company_name}
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+            className={fieldCls}
           />
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium">
+          <label htmlFor="email" className={labelCls}>
             Email
           </label>
           <input
@@ -60,11 +67,11 @@ export function LeadEditForm({ lead }: { lead: Lead }) {
             type="email"
             required
             defaultValue={lead.email}
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+            className={fieldCls}
           />
         </div>
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium">
+          <label htmlFor="phone" className={labelCls}>
             Telefone
           </label>
           <input
@@ -73,13 +80,13 @@ export function LeadEditForm({ lead }: { lead: Lead }) {
             type="tel"
             inputMode="tel"
             defaultValue={lead.phone ?? ""}
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+            className={fieldCls}
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor="pain_point" className="block text-sm font-medium">
+        <label htmlFor="pain_point" className={labelCls}>
           Dor declarada
         </label>
         <textarea
@@ -87,26 +94,18 @@ export function LeadEditForm({ lead }: { lead: Lead }) {
           name="pain_point"
           rows={3}
           defaultValue={lead.pain_point ?? ""}
-          className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+          className={fieldCls}
         />
       </div>
 
       {state.status === "error" && state.message ? (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-          {state.message}
-        </p>
+        <p className={errorMsg}>{state.message}</p>
       ) : null}
       {state.status === "ok" && state.message ? (
-        <p className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-          {state.message}
-        </p>
+        <p className={okMsg}>{state.message}</p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded-md border border-neutral-300 px-4 py-2 text-sm hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
-      >
+      <button type="submit" disabled={pending} className={secondaryBtn}>
         {pending ? "Salvando..." : "Salvar dados"}
       </button>
     </form>

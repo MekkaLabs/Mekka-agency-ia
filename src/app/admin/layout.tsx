@@ -11,22 +11,25 @@ export default async function AdminLayout({
 }) {
   if (!hasSupabaseEnv()) {
     return (
-      <main className="mx-auto max-w-2xl px-6 py-16">
-        <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+      <main className="relative z-10 mx-auto max-w-2xl px-6 py-16">
+        <p className="text-xs uppercase tracking-[0.2em] text-ink-faint">
           Mekka Labs Admin
         </p>
-        <h1 className="mt-3 text-2xl font-semibold">
-          Supabase nao configurado
+        <h1 className="font-display mt-3 text-2xl font-semibold">
+          Supabase não configurado
         </h1>
-        <p className="mt-3 text-neutral-700">
-          Preencha <code className="rounded bg-neutral-100 px-1.5 py-0.5">.env.local</code>{" "}
+        <p className="mt-3 text-ink-muted">
+          Preencha{" "}
+          <code className="rounded bg-white/10 px-1.5 py-0.5">.env.local</code>{" "}
           com as credenciais do projeto para acessar o admin. Use{" "}
-          <code className="rounded bg-neutral-100 px-1.5 py-0.5">.env.local.example</code>{" "}
-          como referencia.
+          <code className="rounded bg-white/10 px-1.5 py-0.5">
+            .env.local.example
+          </code>{" "}
+          como referência.
         </p>
         <Link
           href="/"
-          className="mt-6 inline-block text-sm text-neutral-500 underline hover:text-neutral-900"
+          className="mt-6 inline-block text-sm text-ink-faint underline hover:text-ink"
         >
           Voltar para o site
         </Link>
@@ -44,33 +47,35 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
+    <div className="relative z-10 min-h-screen">
+      <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-bg/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-6">
-            <Link
-              href="/admin"
-              className="text-sm font-semibold tracking-tight"
-            >
-              Mekka Admin
+            <Link href="/admin" className="flex items-center gap-2.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent-2 text-sm font-bold text-bg">
+                M
+              </span>
+              <span className="font-display text-[15px] font-semibold tracking-tight">
+                Mekka Admin
+              </span>
             </Link>
-            <nav className="flex items-center gap-4 text-sm text-neutral-600">
-              <Link href="/admin" className="hover:text-neutral-900">
+            <nav className="flex items-center gap-5 text-sm text-ink-muted">
+              <Link href="/admin" className="hover:text-ink">
                 Dashboard
               </Link>
-              <Link href="/admin/leads" className="hover:text-neutral-900">
+              <Link href="/admin/leads" className="hover:text-ink">
                 Leads
               </Link>
             </nav>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden text-xs text-neutral-500 sm:inline">
+            <span className="hidden text-xs text-ink-faint sm:inline">
               {user.email}
             </span>
             <form action={signOut}>
               <button
                 type="submit"
-                className="text-sm text-neutral-500 hover:text-neutral-900"
+                className="text-sm text-ink-muted transition-colors hover:text-ink"
               >
                 Sair
               </button>

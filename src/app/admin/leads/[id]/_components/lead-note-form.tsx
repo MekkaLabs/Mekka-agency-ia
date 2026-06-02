@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { addLeadNote, type ActionState } from "../../../actions";
+import { fieldCls, primaryBtn, errorMsgSm } from "../../_components/form-styles";
 
 const initialState: ActionState = { status: "idle" };
 
@@ -21,30 +22,24 @@ export function LeadNoteForm({ leadId }: { leadId: string }) {
     <form
       ref={formRef}
       action={formAction}
-      className="rounded-md border border-neutral-200 bg-white p-4"
+      className="rounded-xl border border-white/[0.08] bg-surface/50 p-4"
     >
       <textarea
         name="body"
         rows={3}
         required
         placeholder="o que voce conversou, decidiu ou precisa lembrar..."
-        className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+        className={fieldCls}
       />
       <div className="mt-3 flex items-center justify-between gap-3">
         {state.status === "error" && state.message ? (
-          <p className="rounded-md bg-red-50 px-2 py-1 text-xs text-red-700">
-            {state.message}
-          </p>
+          <p className={errorMsgSm}>{state.message}</p>
         ) : (
-          <span className="text-xs text-neutral-400">
+          <span className="text-xs text-ink-faint">
             {state.status === "ok" ? state.message : ""}
           </span>
         )}
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
-        >
+        <button type="submit" disabled={pending} className={primaryBtn}>
           {pending ? "Adicionando..." : "Adicionar nota"}
         </button>
       </div>

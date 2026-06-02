@@ -41,6 +41,27 @@ const VALID_STAGES: LeadStage[] = [
   "descartado",
 ];
 
+/**
+ * Move rápido de etapa no kanban. Form puro (sem useActionState):
+ * lê leadId + stage do FormData e atualiza. Falha em silêncio se inválido.
+ */
+export async function moveLeadStage(formData: FormData) {
+  const leadId = String(formData.get("leadId") ?? "");
+  const stage = String(formData.get("stage") ?? "") as LeadStage;
+  if (!leadId || !VALID_STAGES.includes(stage)) return;
+  if (!hasSupabaseEnv()) return;
+
+  const supabase = await createClient();
+  await supabase
+    .from("leads")
+    .update({ pipeline_stage: stage, updated_at: new Date().toISOString() })
+    .eq("id", leadId);
+
+  revalidatePath("/admin/pipeline");
+  revalidatePath("/admin");
+  revalidatePath("/admin/leads");
+}
+
 export async function updateLeadStage(
   leadId: string,
   _prev: ActionState,

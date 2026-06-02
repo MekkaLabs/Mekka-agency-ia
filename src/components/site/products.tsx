@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Container } from "../ui/container";
 import { Eyebrow } from "../ui/badge";
 import { products } from "@/lib/products";
@@ -21,8 +22,9 @@ export function Products() {
 
         <div className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {products.map((p) => (
-            <article
+            <Link
               key={p.slug}
+              href={`/produtos/${p.slug}`}
               className={`card-lift group relative flex flex-col rounded-2xl border p-6 ${
                 p.featured
                   ? "border-accent/30 bg-gradient-to-b from-accent/[0.08] to-transparent"
@@ -64,7 +66,10 @@ export function Products() {
               <p className="mt-auto pt-5 text-sm font-medium text-ink">
                 → {p.outcome}
               </p>
-            </article>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm text-accent-soft opacity-0 transition-opacity group-hover:opacity-100">
+                Saiba mais →
+              </span>
+            </Link>
           ))}
         </div>
       </Container>

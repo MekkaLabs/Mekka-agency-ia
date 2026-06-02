@@ -1,3 +1,8 @@
+export type HowStep = {
+  title: string;
+  desc: string;
+};
+
 export type Product = {
   slug: string;
   name: string;
@@ -14,6 +19,16 @@ export type Product = {
   icon: string;
   /** Produto de entrada / destaque na home. */
   featured?: boolean;
+
+  /* --- Conteúdo da página dedicada --- */
+  /** Headline da página do produto. */
+  headline: string;
+  /** Parágrafo de abertura da página. */
+  intro: string;
+  /** Como funciona, específico do produto (3 passos). */
+  howItWorks: HowStep[];
+  /** Para quem / em que cenário brilha. */
+  forWho: string;
 };
 
 export const products: Product[] = [
@@ -33,6 +48,25 @@ export const products: Product[] = [
     outcome: "Zero lead esperando. Zero lead esquecido.",
     icon: "💬",
     featured: true,
+    headline: "O primeiro a responder ganha. Que seja você — sempre.",
+    intro:
+      "No B2B de serviço, quem responde primeiro fecha. A camada de Atendimento da Mekka garante que nenhum contato espere — de madrugada, no fim de semana, no pico do dia. O agente entende o que o lead precisa, qualifica e já entrega pronto pro seu time agir.",
+    howItWorks: [
+      {
+        title: "Conecta nos seus canais",
+        desc: "WhatsApp, site e onde mais o lead chega. Sem trocar de número, sem migrar nada.",
+      },
+      {
+        title: "Atende e qualifica",
+        desc: "Responde em segundos, entende o contexto, faz as perguntas certas e identifica perfil e dor.",
+      },
+      {
+        title: "Entrega pronto pro humano",
+        desc: "Lead qualificado cai no seu CRM com próxima ação definida. Seu time só fecha.",
+      },
+    ],
+    forWho:
+      "Escritórios que recebem lead por WhatsApp e indicação e perdem negócio pela demora na primeira resposta.",
   },
   {
     slug: "prospeccao",
@@ -49,6 +83,25 @@ export const products: Product[] = [
     ],
     outcome: "Pipeline que anda sozinho enquanto você entrega.",
     icon: "🎯",
+    headline: "A proposta não morre no silêncio. O follow-up acontece sozinho.",
+    intro:
+      "A maior parte das vendas B2B se perde entre a proposta enviada e o follow-up que ninguém faz. A camada de Prospecção retoma cada lead com a cadência certa, na linguagem certa, até virar um sim ou um não claro — sem depender da memória de ninguém.",
+    howItWorks: [
+      {
+        title: "Mapeia o pipeline",
+        desc: "Cada lead e proposta entra numa cadência adequada ao estágio e ao perfil.",
+      },
+      {
+        title: "Retoma no tempo certo",
+        desc: "Mensagens personalizadas em múltiplos canais, no ritmo que mantém o lead quente sem irritar.",
+      },
+      {
+        title: "Agenda a reunião",
+        desc: "Quando o lead responde, a reunião cai direto na sua agenda. Você entra só pra fechar.",
+      },
+    ],
+    forWho:
+      "Times comerciais que geram reunião mas perdem ritmo no follow-up e veem proposta esfriar.",
   },
   {
     slug: "suporte",
@@ -65,6 +118,25 @@ export const products: Product[] = [
     ],
     outcome: "Suporte que escala sem contratar mais gente.",
     icon: "🛟",
+    headline: "O repetitivo resolvido sozinho. Seu time no que importa.",
+    intro:
+      "Boa parte do suporte é a mesma pergunta repetida. A camada de Suporte aprende sua base de conhecimento e responde com consistência e na voz da empresa — escalando pro humano só quando realmente precisa.",
+    howItWorks: [
+      {
+        title: "Aprende sua operação",
+        desc: "Ingerimos documentos, FAQs e histórico pra criar uma base de conhecimento viva.",
+      },
+      {
+        title: "Responde com consistência",
+        desc: "Cada cliente recebe a mesma qualidade de resposta, no tom da sua marca, na hora.",
+      },
+      {
+        title: "Escala quando precisa",
+        desc: "Casos sensíveis ou fora do script vão pro humano certo, com todo o contexto.",
+      },
+    ],
+    forWho:
+      "Operações que afogam o time em dúvidas repetidas e querem escalar atendimento sem inchar a equipe.",
   },
   {
     slug: "conteudo",
@@ -81,6 +153,25 @@ export const products: Product[] = [
     ],
     outcome: "Mais material, menos dependência de uma pessoa.",
     icon: "✍️",
+    headline: "A produção não trava mais numa pessoa só.",
+    intro:
+      "Quando todo material depende de uma cabeça, a empresa produz no ritmo dela. A camada de Conteúdo transforma sua identidade em uma rotina de produção — posts, emails, propostas e roteiros — em escala e sem perder o tom.",
+    howItWorks: [
+      {
+        title: "Captura sua voz",
+        desc: "Definimos tom, referências e formatos pra que tudo saia com a cara da marca.",
+      },
+      {
+        title: "Produz sob demanda",
+        desc: "Posts, emails, roteiros e apoio a páginas e criativos quando você precisa.",
+      },
+      {
+        title: "Da ideia ao publicado",
+        desc: "Fluxo de revisão enxuto, do rascunho ao no ar, sem retrabalho.",
+      },
+    ],
+    forWho:
+      "Agências e escritórios que precisam produzir com volume mas vivem travados na agenda de uma pessoa.",
   },
   {
     slug: "analise",
@@ -97,6 +188,25 @@ export const products: Product[] = [
     ],
     outcome: "Decisão baseada em dado, não em achismo.",
     icon: "📊",
+    headline: "Seus dados já existem. Falta alguém lendo por você.",
+    intro:
+      "Toda empresa acumula dado e nenhuma tem tempo de olhar. A camada de Análise transforma sua operação em relatórios que falam a língua da decisão: o que melhorou, o que travou, e o que fazer a seguir.",
+    howItWorks: [
+      {
+        title: "Conecta as fontes",
+        desc: "CRM, planilhas e ferramentas da operação viram uma visão única.",
+      },
+      {
+        title: "Lê e traduz",
+        desc: "Relatórios recorrentes em linguagem de decisão — não tabelas que ninguém abre.",
+      },
+      {
+        title: "Alerta o que importa",
+        desc: "O que precisa de atenção chega até você antes de virar problema.",
+      },
+    ],
+    forWho:
+      "Sócios e gestores que decidem no achismo porque ninguém tem tempo de transformar dado em leitura.",
   },
   {
     slug: "operacao",
@@ -113,6 +223,25 @@ export const products: Product[] = [
     ],
     outcome: "A operação roda mesmo quando você não está.",
     icon: "⚙️",
+    headline: "A empresa para de viver na cabeça do dono.",
+    intro:
+      "Quando tudo depende de uma pessoa-chave, a empresa não escala — e fica refém. A camada de Operação documenta processos, cria memória e opera o onboarding com IA, pra que a operação rode mesmo quando você não está.",
+    howItWorks: [
+      {
+        title: "Documenta o que está na cabeça",
+        desc: "Processos, SOPs e respostas-padrão saem da memória e viram estrutura.",
+      },
+      {
+        title: "Cria memória viva",
+        desc: "Uma base operacional que a equipe e a IA consultam — e que cresce com o uso.",
+      },
+      {
+        title: "Onboarda no automático",
+        desc: "Novo funcionário entra com contexto e treino guiado por IA, sem travar ninguém.",
+      },
+    ],
+    forWho:
+      "Empresas onde o fundador é o gargalo de tudo e querem reduzir a dependência de pessoas-chave.",
   },
 ];
 

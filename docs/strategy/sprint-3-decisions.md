@@ -187,3 +187,50 @@ UI no Sprint 3.1**. Se aparecer vontade de "deixar mais bonito", a regra é
 5. `/admin/leads/[id]` detail
 
 Cada milestone é mostrado antes do próximo começar.
+
+---
+
+## Fase 3.2 — Redesign premium do site público (2026-06-02)
+
+**Pivot consciente.** A regra "feio funcional > bonito inerte" cumpriu o
+papel: validou a estrutura do funil (home → form → CRM) com baixo custo.
+Validada a estrutura, o gargalo de conversão passou a ser percepção de
+qualidade — escritórios B2B confiam mais em quem parece sólido. Decisão do
+fundador: subir o site para nível de referência de mercado.
+
+**Override registrado:** o ban de "design system / atomic design" da Fase 3.1
+foi suspenso PARA O SITE PÚBLICO. Criado um mini design system
+(`src/components/ui/` + tokens em `globals.css` via `@theme`). O `/admin`
+continua no tema claro funcional (padrão marketing-dark / app-claro).
+
+**Referências destiladas:**
+
+| Site | O que foi extraído |
+|---|---|
+| Linear | escala tipográfica, restrição, glow radial, feature rows |
+| Vercel | contraste alto, CTA primário branco-sobre-escuro |
+| Resend | gradiente de accent, ritmo de seções dark |
+| Raycast | grade de produtos estilo "store" |
+| Brex | trust strip com stats, hierarquia de confiança |
+| Rows | copy centrado em dor/resultado, não em feature |
+
+**Direção visual:** dark premium, near-black + 1 accent violeta (#8b5cf6) com
+parceiro cyan (#22d3ee) nos glows. Fontes Inter (corpo) + Space Grotesk
+(display). Arquitetado em CSS variables → flip para light é barato.
+
+**Síntese foco × amplitude:** hero permanece afiado numa dor só ("lead
+esfria"). Os 6 produtos aparecem ABAIXO como leque — exatamente como
+Linear/Vercel fazem. Foco no topo, amplitude embaixo. As decisões 1 e 2
+(ICP + Dor) continuam intactas.
+
+**Os 6 produtos** (em `src/lib/products.ts`, single source):
+Atendimento (featured) · Prospecção/SDR · Suporte · Conteúdo ·
+Análise & Relatórios · Operação & Onboarding.
+
+**Estrutura da home:** Nav sticky → Hero (glow + mockup de chat ao vivo) →
+Trust strip (4 stats) → Produtos (grid) → Como funciona (3 passos) →
+Antes/depois em 30 dias → Prova honesta (vaga de fundador) → CTA com form →
+Footer.
+
+**Admin user criado** no Supabase para login real
+(`gustav0.v1c3nt3@gmail.com`).

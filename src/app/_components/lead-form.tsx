@@ -5,6 +5,11 @@ import { captureLead, type CaptureLeadState } from "../actions";
 
 const initialState: CaptureLeadState = { status: "idle" };
 
+const fieldCls =
+  "mt-1 w-full rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-accent/60 focus:bg-white/[0.05] focus:outline-none";
+
+const labelCls = "block text-xs font-medium text-ink-muted";
+
 export function LeadForm() {
   const [state, formAction, pending] = useActionState(
     captureLead,
@@ -14,7 +19,7 @@ export function LeadForm() {
   return (
     <form action={formAction} className="space-y-4">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium">
+        <label htmlFor="name" className={labelCls}>
           Seu nome
         </label>
         <input
@@ -23,12 +28,12 @@ export function LeadForm() {
           type="text"
           required
           autoComplete="name"
-          className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+          className={fieldCls}
         />
       </div>
 
       <div>
-        <label htmlFor="company" className="block text-sm font-medium">
+        <label htmlFor="company" className={labelCls}>
           Empresa
         </label>
         <input
@@ -37,13 +42,13 @@ export function LeadForm() {
           type="text"
           required
           autoComplete="organization"
-          className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+          className={fieldCls}
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium">
+          <label htmlFor="email" className={labelCls}>
             Email
           </label>
           <input
@@ -52,38 +57,39 @@ export function LeadForm() {
             type="email"
             required
             autoComplete="email"
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+            className={fieldCls}
           />
         </div>
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium">
-            Telefone <span className="text-neutral-400">(opcional)</span>
+          <label htmlFor="phone" className={labelCls}>
+            Telefone <span className="text-ink-faint">(opcional)</span>
           </label>
           <input
             id="phone"
             name="phone"
             type="tel"
+            inputMode="tel"
             autoComplete="tel"
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+            className={fieldCls}
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor="pain_point" className="block text-sm font-medium">
-          Qual sua maior dor com atendimento hoje?{" "}
-          <span className="text-neutral-400">(opcional)</span>
+        <label htmlFor="pain_point" className={labelCls}>
+          Sua maior dor com atendimento hoje{" "}
+          <span className="text-ink-faint">(opcional)</span>
         </label>
         <textarea
           id="pain_point"
           name="pain_point"
           rows={3}
-          className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
+          className={fieldCls}
         />
       </div>
 
       {state.status === "error" && state.message ? (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300">
           {state.message}
         </p>
       ) : null}
@@ -91,10 +97,14 @@ export function LeadForm() {
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-md bg-neutral-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
+        className="w-full rounded-full bg-ink px-5 py-3 text-sm font-semibold text-bg transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {pending ? "Enviando..." : "Quero parar de perder lead"}
       </button>
+
+      <p className="text-center text-xs text-ink-faint">
+        Respondemos em até 1 hora útil.
+      </p>
     </form>
   );
 }

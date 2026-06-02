@@ -8,10 +8,13 @@ import { Proof } from "@/components/site/proof";
 import { FAQ } from "@/components/site/faq";
 import { CTA } from "@/components/site/cta";
 import { Footer } from "@/components/site/footer";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/site/json-ld";
 
 export default function Home() {
   return (
     <div className="relative z-10">
+      <OrganizationJsonLd />
+      <WebSiteJsonLd />
       <Nav />
       <main>
         <Hero />

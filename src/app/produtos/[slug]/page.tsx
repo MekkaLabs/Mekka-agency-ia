@@ -7,6 +7,7 @@ import { CTA } from "@/components/site/cta";
 import { Container } from "@/components/ui/container";
 import { ButtonLink } from "@/components/ui/button";
 import { Badge, Eyebrow } from "@/components/ui/badge";
+import { ProductJsonLd } from "@/components/site/json-ld";
 import { products, getProduct } from "@/lib/products";
 
 export function generateStaticParams() {
@@ -40,6 +41,7 @@ export default async function ProductPage({
 
   return (
     <div className="relative z-10">
+      <ProductJsonLd product={product} />
       <Nav />
       <main>
         {/* Hero */}

@@ -48,44 +48,64 @@ export default async function AdminDashboard() {
     1,
   ).toISOString();
   const hourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
+  const todayDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
-  const [newTodayQuery, activeQuery, waitingQuery, ttfrQuery, queueQuery] =
-    await Promise.all([
-      supabase
-        .from("leads")
-        .select("id", { count: "exact", head: true })
-        .gte("created_at", todayMidnight),
-      supabase
-        .from("leads")
-        .select("id", { count: "exact", head: true })
-        .not("pipeline_stage", "in", "(fechado,descartado)"),
-      supabase
-        .from("leads")
-        .select("id", { count: "exact", head: true })
-        .is("first_response_at", null)
-        .not("pipeline_stage", "in", "(fechado,descartado)")
-        .lt("created_at", hourAgo),
-      supabase
-        .from("leads")
-        .select("created_at,first_response_at")
-        .not("first_response_at", "is", null)
-        .gte("first_response_at", monthStart),
-      supabase
-        .from("leads")
-        .select(
-          "id,name,company_name,next_action,pipeline_stage,updated_at,created_at,first_response_at",
-        )
-        .not("next_action", "is", null)
-        .not("pipeline_stage", "in", "(fechado,descartado)")
-        .order("updated_at", { ascending: true })
-        .limit(5),
-    ]);
+  const [
+    newTodayQuery,
+    activeQuery,
+    waitingQuery,
+    ttfrQuery,
+    overdueQuery,
+    queueQuery,
+  ] = await Promise.all([
+    supabase
+      .from("leads")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", todayMidnight),
+    supabase
+      .from("leads")
+      .select("id", { count: "exact", head: true })
+      .not("pipeline_stage", "in", "(fechado,descartado)"),
+    supabase
+      .from("leads")
+      .select("id", { count: "exact", head: true })
+      .is("first_response_at", null)
+      .not("pipeline_stage", "in", "(fechado,descartado)")
+      .lt("created_at", hourAgo),
+    supabase
+      .from("leads")
+      .select("created_at,first_response_at")
+      .not("first_response_at", "is", null)
+      .gte("first_response_at", monthStart),
+    supabase
+      .from("leads")
+      .select("id,name,company_name,next_action,next_action_due,pipeline_stage")
+      .not("next_action_due", "is", null)
+      .lt("next_action_due", todayDate)
+      .not("pipeline_stage", "in", "(fechado,descartado)")
+      .order("next_action_due", { ascending: true })
+      .limit(10),
+    supabase
+      .from("leads")
+      .select(
+        "id,name,company_name,next_action,pipeline_stage,updated_at,created_at,first_response_at",
+      )
+      .not("next_action", "is", null)
+      .not("pipeline_stage", "in", "(fechado,descartado)")
+      .order("updated_at", { ascending: true })
+      .limit(5),
+  ]);
 
   const newToday = newTodayQuery.count ?? 0;
   const active = activeQuery.count ?? 0;
   const waiting = waitingQuery.count ?? 0;
+  const overdue = overdueQuery.data ?? [];
   const queue = queueQuery.data ?? [];
   const nowMs = now.getTime();
+
+  function daysSince(iso: string) {
+    return Math.floor((nowMs - new Date(iso).getTime()) / 86400000);
+  }
 
   // Media de TTFR no mes corrente.
   const ttfrSamples = ttfrQuery.data ?? [];
@@ -120,11 +140,54 @@ export default async function AdminDashboard() {
           tone={waiting > 0 ? "warn" : "neutral"}
         />
         <StatCard
-          label="Tempo medio de resposta (mes)"
-          value={ttfrLabel}
-          sub={`${ttfrSamples.length} respondidos`}
+          label="Ação atrasada"
+          value={String(overdue.length)}
+          tone={overdue.length > 0 ? "warn" : "neutral"}
+          sub="prazo vencido"
         />
       </section>
+
+      {overdue.length > 0 ? (
+        <section>
+          <h2 className="text-sm uppercase tracking-[0.18em] text-red-300">
+            Pendências atrasadas
+          </h2>
+          <ul className="mt-4 divide-y divide-white/[0.06] overflow-hidden rounded-xl border border-red-500/20 bg-red-500/[0.04]">
+            {overdue.map((lead) => (
+              <li key={lead.id}>
+                <Link
+                  href={`/admin/leads/${lead.id}`}
+                  className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-white/[0.03]"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate font-medium text-ink">
+                        {lead.name}
+                      </span>
+                      <span className="text-ink-faint">&middot;</span>
+                      <span className="truncate text-ink-muted">
+                        {lead.company_name}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 truncate text-sm text-ink-faint">
+                      {lead.next_action}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-xs text-red-300">
+                    venceu{" "}
+                    {new Date(
+                      lead.next_action_due as unknown as string,
+                    ).toLocaleDateString("pt-BR", {
+                      day: "2-digit",
+                      month: "short",
+                    })}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section>
         <div className="flex items-baseline justify-between">
@@ -174,6 +237,10 @@ export default async function AdminDashboard() {
                         {waitingHours !== null && waitingHours >= 1 ? (
                           <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2 py-0.5 text-xs text-red-300">
                             aguardando {waitingHours}h
+                          </span>
+                        ) : daysSince(lead.updated_at) >= 3 ? (
+                          <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-xs text-amber-300">
+                            parado {daysSince(lead.updated_at)}d
                           </span>
                         ) : null}
                       </div>

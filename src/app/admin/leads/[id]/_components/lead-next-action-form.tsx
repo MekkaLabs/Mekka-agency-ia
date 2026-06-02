@@ -15,9 +15,11 @@ const initialState: ActionState = { status: "idle" };
 export function LeadNextActionForm({
   leadId,
   current,
+  due,
 }: {
   leadId: string;
   current: string | null;
+  due: string | null;
 }) {
   const bound = updateLeadNextAction.bind(null, leadId);
   const [state, formAction, pending] = useActionState(bound, initialState);
@@ -25,12 +27,19 @@ export function LeadNextActionForm({
   return (
     <form action={formAction} className="space-y-2">
       <label className={labelCls}>Próxima ação</label>
+      <input
+        name="next_action"
+        defaultValue={current ?? ""}
+        placeholder="ex: ligar amanhã 10h"
+        className={`${fieldCls} mt-0`}
+      />
       <div className="flex items-stretch gap-2">
         <input
-          name="next_action"
-          defaultValue={current ?? ""}
-          placeholder="ex: ligar amanha 10h"
-          className={`${fieldCls} mt-0`}
+          type="date"
+          name="next_action_due"
+          defaultValue={due ?? ""}
+          className={`${fieldCls} mt-0 [color-scheme:dark]`}
+          aria-label="Prazo da próxima ação"
         />
         <button type="submit" disabled={pending} className={secondaryBtn}>
           {pending ? "..." : "Salvar"}

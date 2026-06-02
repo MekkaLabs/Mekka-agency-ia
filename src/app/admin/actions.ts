@@ -97,6 +97,10 @@ export async function updateLeadNextAction(
   formData: FormData,
 ): Promise<ActionState> {
   const value = String(formData.get("next_action") ?? "").trim();
+  const dueRaw = String(formData.get("next_action_due") ?? "").trim();
+  // input type=date entrega YYYY-MM-DD; vazio vira null.
+  const due = /^\d{4}-\d{2}-\d{2}$/.test(dueRaw) ? dueRaw : null;
+
   if (!hasSupabaseEnv()) {
     return { status: "error", message: "Supabase nao configurado." };
   }
@@ -106,6 +110,7 @@ export async function updateLeadNextAction(
     .from("leads")
     .update({
       next_action: value || null,
+      next_action_due: due,
       updated_at: new Date().toISOString(),
     })
     .eq("id", leadId);

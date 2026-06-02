@@ -39,7 +39,7 @@ export default async function LeadsList({
   let query = supabase
     .from("leads")
     .select(
-      "id,name,company_name,email,pipeline_stage,next_action,created_at,updated_at,first_response_at",
+      "id,name,company_name,email,pipeline_stage,next_action,next_action_due,created_at,updated_at,first_response_at",
     )
     .order("created_at", { ascending: false })
     .limit(100);
@@ -154,13 +154,19 @@ export default async function LeadsList({
       ) : (
         <ul className="divide-y divide-white/[0.06] overflow-hidden rounded-xl border border-white/[0.08] bg-surface/50">
           {leads.map((lead) => {
+            const active = !["fechado", "descartado"].includes(
+              lead.pipeline_stage,
+            );
             const waitingHours =
-              lead.first_response_at === null &&
-              !["fechado", "descartado"].includes(lead.pipeline_stage)
+              lead.first_response_at === null && active
                 ? Math.round(
                     (nowMs - new Date(lead.created_at).getTime()) / 3600000,
                   )
                 : null;
+            const overdue =
+              active &&
+              lead.next_action_due != null &&
+              new Date(lead.next_action_due).getTime() < nowMs;
             return (
               <li key={lead.id}>
                 <Link
@@ -179,6 +185,11 @@ export default async function LeadsList({
                       {waitingHours !== null && waitingHours >= 1 ? (
                         <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2 py-0.5 text-xs text-red-300">
                           aguardando {waitingHours}h
+                        </span>
+                      ) : null}
+                      {overdue ? (
+                        <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-xs text-amber-300">
+                          ação atrasada
                         </span>
                       ) : null}
                     </div>
